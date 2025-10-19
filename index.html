@@ -22,6 +22,21 @@
             --bg: #0a0a15;
             --card-bg: rgba(20, 20, 40, 0.7);
             --text: #e0e0e0;
+            --header-bg: rgba(15, 15, 30, 0.8);
+            --nav-bg: rgba(15, 15, 30, 0.9);
+            --footer-bg: rgba(15, 15, 30, 0.8);
+        }
+
+        [data-theme="light"] {
+            --primary: #0066cc;
+            --secondary: #cc00cc;
+            --accent: #00aa66;
+            --bg: #f5f5f7;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text: #333333;
+            --header-bg: rgba(240, 240, 245, 0.9);
+            --nav-bg: rgba(240, 240, 245, 0.95);
+            --footer-bg: rgba(240, 240, 245, 0.9);
         }
         
         * {
@@ -36,9 +51,10 @@
             color: var(--text);
             background: var(--bg);
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
         
-        /* Animated background */
+        /* Simplified background with better performance */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -46,76 +62,22 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.3;
-        }
-        
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            animation: float 15s infinite linear;
-        }
-        
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 80%;
-            animation-delay: 5s;
-            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
-        }
-        
-        .bg-circle:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            top: 30%;
-            left: 60%;
-            animation-delay: 10s;
-            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            33% {
-                transform: translate(30px, -50px) rotate(120deg);
-            }
-            66% {
-                transform: translate(-20px, 20px) rotate(240deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
+            opacity: 0.1;
+            background: 
+                radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, var(--secondary) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, var(--accent) 0%, transparent 20%);
         }
         
         header {
-            background: rgba(15, 15, 30, 0.8);
+            background: var(--header-bg);
             color: var(--primary);
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
             border-bottom: 1px solid rgba(0, 245, 255, 0.3);
-        }
-        
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1) 0%, rgba(255, 0, 230, 0.1) 100%);
-            z-index: -1;
+            transition: background-color 0.3s;
         }
         
         .header-content {
@@ -126,27 +88,17 @@
         }
         
         header h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px rgba(0, 245, 255, 0.7);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
-            }
-            to {
-                text-shadow: 0 0 20px rgba(0, 245, 255, 0.9), 0 0 30px rgba(0, 245, 255, 0.5);
-            }
         }
         
         header p {
-            font-size: 1.3rem;
+            font-size: clamp(1rem, 3vw, 1.3rem);
             margin-bottom: 1.5rem;
             opacity: 0.9;
         }
@@ -161,6 +113,7 @@
             font-weight: 600;
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0, 245, 255, 0.4);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
         }
         
         .cta-button:hover {
@@ -168,23 +121,53 @@
             box-shadow: 0 6px 20px rgba(0, 245, 255, 0.6);
         }
         
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+        
         /* Translucent sticky navigation */
         nav {
-            background: rgba(15, 15, 30, 0.9);
+            background: var(--nav-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 245, 255, 0.2);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.3s;
         }
         
         nav ul {
             list-style: none;
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            padding: 1rem 2rem;
+            gap: 1rem;
+            padding: 1rem;
             flex-wrap: wrap;
         }
         
@@ -193,7 +176,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s;
-            font-size: 1rem;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
             padding: 0.5rem 1rem;
             border-radius: 5px;
             position: relative;
@@ -222,29 +205,29 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem;
         }
         
         section {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            margin: 2rem 0;
-            padding: 2.5rem;
+            margin: 1.5rem 0;
+            padding: clamp(1.5rem, 4vw, 2.5rem);
             border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
         }
         
         section:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
-        /* Colorful section backgrounds with dark theme */
+        /* Colorful section backgrounds */
         section::before {
             content: '';
             position: absolute;
@@ -278,9 +261,9 @@
         h2 {
             color: var(--primary);
             margin-bottom: 1.5rem;
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
             padding-bottom: 0.5rem;
-            text-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
             position: relative;
             display: inline-block;
         }
@@ -297,49 +280,38 @@
         
         .project-card {
             border-left: 4px solid var(--primary);
-            padding: 1.8rem;
-            margin: 1.8rem 0;
+            padding: clamp(1.2rem, 3vw, 1.8rem);
+            margin: 1.5rem 0;
             background: rgba(25, 25, 45, 0.6);
             border-radius: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
         }
         
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .project-card:hover::before {
-            left: 100%;
+        [data-theme="light"] .project-card {
+            background: rgba(240, 240, 250, 0.8);
         }
         
         .project-card:hover {
-            transform: translateX(8px);
-            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.2);
         }
         
         .project-card h3 {
             color: var(--primary);
             margin-bottom: 0.8rem;
-            font-size: 1.4rem;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
         }
         
         .project-card p {
-            color: #d0d0d0;
+            color: var(--text);
             margin-bottom: 0.8rem;
+            opacity: 0.9;
         }
         
         .project-card ul {
-            color: #d0d0d0;
+            color: var(--text);
             margin-bottom: 1rem;
+            opacity: 0.9;
         }
         
         .project-card strong {
@@ -364,44 +336,65 @@
             transform: translateY(-2px);
         }
         
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
+        /* Enhanced Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
         
-        .skill-tag {
-            background: rgba(0, 245, 255, 0.15);
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 500;
+        .skill-category {
+            background: rgba(25, 25, 45, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .skill-tag::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.3), transparent);
-            transition: left 0.5s;
+        [data-theme="light"] .skill-category {
+            background: rgba(240, 240, 250, 0.8);
         }
         
-        .skill-tag:hover::before {
-            left: 100%;
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.2);
         }
         
-        .skill-tag:hover {
-            background: rgba(0, 245, 255, 0.25);
-            box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
-            transform: translateY(-3px);
+        .skill-category h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-category ul {
+            list-style: none;
+        }
+        
+        .skill-category li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .skill-category li:hover {
+            color: var(--accent);
+            padding-left: 0.5rem;
+        }
+        
+        .skill-category li:last-child {
+            border-bottom: none;
+        }
+        
+        .skill-category li::before {
+            content: '▹';
+            color: var(--primary);
         }
         
         .contact-links {
@@ -409,6 +402,7 @@
             gap: 1.5rem;
             margin-top: 1.5rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
         
         .contact-links a {
@@ -423,108 +417,64 @@
             border: 1px solid var(--primary);
             border-radius: 8px;
             background: rgba(0, 245, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .contact-links a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .contact-links a:hover::before {
-            left: 100%;
         }
         
         .contact-links a:hover {
             background: rgba(0, 245, 255, 0.2);
             text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
             transform: translateY(-3px);
         }
         
         footer {
             text-align: center;
-            padding: 2.5rem;
-            color: #666;
-            background: rgba(15, 15, 30, 0.8);
-            margin-top: 3rem;
+            padding: 2rem;
+            color: var(--text);
+            background: var(--footer-bg);
+            margin-top: 2rem;
             border-top: 1px solid rgba(0, 245, 255, 0.2);
+            transition: background-color 0.3s;
         }
         
         /* Mobile optimizations */
         @media (max-width: 768px) {
-            header {
-                padding: 2.5rem 1rem;
-            }
-            
-            header h1 {
-                font-size: 2.2rem;
-            }
-            
-            header p {
-                font-size: 1.1rem;
-            }
-            
-            nav ul {
-                gap: 0.5rem;
-                padding: 0.8rem 1rem;
-            }
-            
-            nav a {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
             .container {
                 padding: 1rem;
             }
             
             section {
-                padding: 1.8rem;
-                margin: 1.2rem 0;
+                padding: 1.5rem;
+                margin: 1rem 0;
             }
             
-            h2 {
-                font-size: 1.7rem;
+            .skills-container {
+                grid-template-columns: 1fr;
             }
             
-            .project-card {
-                padding: 1.2rem;
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                top: 0.5rem;
+                right: 0.5rem;
             }
             
-            .project-card h3 {
-                font-size: 1.2rem;
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
             }
         }
         
         @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            header p {
-                font-size: 1rem;
+            header {
+                padding: 2rem 1rem;
             }
             
             nav ul {
-                gap: 0.3rem;
-                padding: 0.6rem 0.5rem;
+                gap: 0.5rem;
             }
             
             nav a {
-                font-size: 0.85rem;
-                padding: 0.3rem 0.6rem;
-            }
-            
-            section {
-                padding: 1.2rem;
+                padding: 0.4rem 0.8rem;
             }
             
             .contact-links {
@@ -557,11 +507,14 @@
     </style>
 </head>
 <body>
-    <!-- Animated background -->
-    <div class="bg-animation">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
+    <!-- Simplified background -->
+    <div class="bg-animation"></div>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+        <svg viewBox="0 0 24 24">
+            <path d="M12,18C8.7,18 6,15.3 6,12C6,8.7 8.7,6 12,6C15.3,6 18,8.7 18,12C18,15.3 15.3,18 12,18M12,8C9.8,8 8,9.8 8,12C8,14.2 9.8,16 12,16C14.2,16 16,14.2 16,12C16,9.8 14.2,8 12,8M12,4C11.4,4 11,3.6 11,3V1C11,0.4 11.4,0 12,0C12.6,0 13,0.4 13,1V3C13,3.6 12.6,4 12,4M12,20C11.4,20 11,19.6 11,19V17C11,16.4 11.4,16 12,16C12.6,16 13,16.4 13,17V19C13,19.6 12.6,20 12,20M4.9,6.3C4.5,5.9 4.5,5.3 4.9,4.9L6.3,3.5C6.7,3.1 7.3,3.1 7.7,3.5C8.1,3.9 8.1,4.5 7.7,4.9L6.3,6.3C5.9,6.7 5.3,6.7 4.9,6.3M19.8,16.7C19.4,16.3 19.4,15.7 19.8,15.3L21.2,13.9C21.6,13.5 22.2,13.5 22.6,13.9C23,14.3 23,14.9 22.6,15.3L21.2,16.7C20.8,17.1 20.2,17.1 19.8,16.7M1,13H3C3.6,13 4,12.6 4,12C4,11.4 3.6,11 3,11H1C0.4,11 0,11.4 0,12C0,12.6 0.4,13 1,13M21,13H23C23.6,13 24,12.6 24,12C24,11.4 23.6,11 23,11H21C20.4,11 20,11.4 20,12C20,12.6 20.4,13 21,13M4.9,17.7C5.3,18.1 5.9,18.1 6.3,17.7L7.7,16.3C8.1,15.9 8.1,15.3 7.7,14.9C7.3,14.5 6.7,14.5 6.3,14.9L4.9,16.3C4.5,16.7 4.5,17.3 4.9,17.7M19.1,6.3C19.5,5.9 19.5,5.3 19.1,4.9L17.7,3.5C17.3,3.1 16.7,3.1 16.3,3.5C15.9,3.9 15.9,4.5 16.3,4.9L17.7,6.3C18.1,6.7 18.7,6.7 19.1,6.3Z"/>
+        </svg>
     </div>
     
     <header>
@@ -657,19 +610,50 @@
         
         <section id="skills" class="fade-in">
             <h2>Technical Skills</h2>
-            <div class="skills">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">PyFluent</span>
-                <span class="skill-tag">PyAnsys</span>
-                <span class="skill-tag">ANSYS Fluent</span>
-                <span class="skill-tag">Autodesk Fusion 360</span>
-                <span class="skill-tag">CFD Analysis</span>
-                <span class="skill-tag">CAD Design</span>
-                <span class="skill-tag">Generative Design</span>
-                <span class="skill-tag">3D Printing</span>
-                <span class="skill-tag">Arduino</span>
-                <span class="skill-tag">ESP8266</span>
-                <span class="skill-tag">Robotics</span>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>🔬 Simulation & Analysis</h3>
+                    <ul>
+                        <li>CFD Analysis</li>
+                        <li>PyFluent</li>
+                        <li>PyAnsys</li>
+                        <li>ANSYS Fluent</li>
+                        <li>Aerodynamics</li>
+                        <li>Optimization</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>💻 Programming & Automation</h3>
+                    <ul>
+                        <li>Python</li>
+                        <li>Automation Scripts</li>
+                        <li>Arduino</li>
+                        <li>ESP8266</li>
+                        <li>IoT</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>🎨 Design & Manufacturing</h3>
+                    <ul>
+                        <li>Autodesk Fusion 360</li>
+                        <li>CAD Design</li>
+                        <li>Generative Design</li>
+                        <li>3D Printing</li>
+                        <li>Mechanical Design</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>🤖 Robotics & Systems</h3>
+                    <ul>
+                        <li>Robotics</li>
+                        <li>Automation</li>
+                        <li>Embedded Systems</li>
+                        <li>Prototyping</li>
+                    </ul>
+                </div>
             </div>
         </section>
         
@@ -685,10 +669,24 @@
     </div>
     
     <footer>
-        <p>&copy; 2025 Hari L. Built with boredom and freedom.</p>
+        <p>&copy; 2025 Hari L. Built with passion and precision.</p>
     </footer>
     
     <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
         // Fade-in animation on scroll
         const fadeElements = document.querySelectorAll('.fade-in');
         
@@ -707,33 +705,21 @@
         // Initial check in case elements are already in view
         fadeInOnScroll();
         
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('nav a').forEach(anchor => {
+        // Smooth scrolling for navigation links and CTA button
+        document.querySelectorAll('nav a, .cta-button').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
     </script>
-    
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/68dfcd812ceaac19516a7503/1j6l3lher';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
 </body>
 </html>
