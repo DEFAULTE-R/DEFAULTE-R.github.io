@@ -1,1255 +1,564 @@
 <!DOCTYPE html>
-<!-- Set default theme to dark -->
-<html lang="en" data-theme="dark">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hari L - Engineering Portfolio</title>
-    
-    <!-- Google Fonts: Inter -->
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- three.js for animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- Pre-body script to prevent flash of wrong theme -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Load Icons (Lucide) - Corrected UMD build -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-gray': '#1a1a1a',
+                        'brand-light-gray': '#2b2b2b',
+                        'brand-text': '#f0f0f0',
+                        'brand-text-muted': '#a0a0a0',
+                        'brand-primary': '#00aaff',
+                    }
+                },
+            },
+        }
     </script>
-
+    <!-- Custom styles for card hover effects (inspired by the reference) -->
     <style>
-        :root {
-            /* Futuristic color palette (DARK MODE) */
-            --bg: #03001C; /* Deep space blue */
-            --nav-bg: rgba(16, 16, 30, 0.7); /* Translucent nav */
-            --card-bg: rgba(10, 10, 25, 0.75); /* Translucent card */
-            --primary: #00f0ff; /* Bright cyan */
-            --secondary: #e040fb; /* Vibrant magenta */
-            --text-light: #e0e0e0;
-            --text-dark: #a0a0c0;
-            --border-glow: rgba(0, 240, 255, 0.2);
-            --shadow-glow: rgba(0, 240, 255, 0.3);
-            --shadow-glow-secondary: rgba(224, 64, 251, 0.3);
-            --icon-color: var(--text-dark);
-            
-            /* Copied from event site for new contact section */
-            --primary-blue: #0FF2E9; 
-            --primary-blue-glow: rgba(0, 191, 255, 0.6);
-            --border-color: rgba(0, 191, 255, 0.3);
-        }
-
-        /* LIGHT MODE color palette */
-        [data-theme="light"] {
-            --bg: #f4f7fc; /* Light background */
-            --nav-bg: rgba(255, 255, 255, 0.7);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --primary: #0077ff; /* Strong blue */
-            --secondary: #d629d6; /* Strong magenta */
-            --text-light: #121212; /* Dark text */
-            --text-dark: #555; /* Medium text */
-            --border-glow: rgba(0, 119, 255, 0.2);
-            --shadow-glow: rgba(0, 119, 255, 0.3);
-            --shadow-glow-secondary: rgba(214, 41, 214, 0.3);
-            --icon-color: var(--text-dark);
-            
-            /* Copied from event site for new contact section */
-            --primary-blue: #0077ff;
-            --primary-blue-glow: rgba(0, 119, 255, 0.6);
-            --border-color: rgba(0, 119, 255, 0.3);
-        }
-
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-light);
-            background-color: var(--bg);
-            overflow-x: hidden;
-            /* Smooth transition for theme change */
-            transition: background-color 0.3s, color 0.3s;
+            background-color: #1a1a1a; /* brand-gray */
+            color: #f0f0f0; /* brand-text */
         }
 
-        /* 3D Particle Background */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.7;
-            /* Fade particles in light mode */
-            transition: opacity 0.3s;
-        }
-
-        [data-theme="light"] #particle-canvas {
-            opacity: 0.3;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Header & Navigation */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-glow);
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Group logo and hamburger menu */
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        /* Group links and theme toggle */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .nav-logo span {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-        }
-
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-            padding: 0.25rem 0;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease-out;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--shadow-glow);
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* Hamburger menu for mobile */
-        .menu-toggle {
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            z-index: 101;
-        }
-        .menu-toggle .bar {
-            width: 25px;
-            height: 3px;
-            background-color: var(--text-light);
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
-        /* Theme Toggle Switch */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .theme-toggle svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--icon-color);
-            transition: fill 0.3s;
-        }
-        
-        /* Hide sun in dark mode, moon in light mode */
-        [data-theme="dark"] .sun-icon { display: block; }
-        [data-theme="dark"] .moon-icon { display: none; }
-        [data-theme="light"] .sun-icon { display: none; }
-        [data-theme="light"] .moon-icon { display: block; }
-
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-        }
-        .theme-switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-        }
-        .theme-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--text-dark);
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--bg);
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-        input:checked + .slider:before {
-            transform: translateX(18px);
-        }
-
-        /* Hero Section */
-        #hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 1;
-            margin-top: -80px; /* Offset for sticky nav */
-        }
-        /* ... existing styles for hero ... */
-        #hero h1 {
-            font-size: clamp(2.5rem, 7vw, 4.5rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1.2;
-        }
-
-        #hero p {
-            font-size: clamp(1rem, 3vw, 1.4rem);
-            color: var(--text-dark);
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-            max-width: 600px;
-            transition: color 0.3s;
-        }
-
-        /* Call-to-Action Button */
-        .cta-button {
-            display: inline-block;
-            padding: 0.9rem 2.5rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            /* Text color adjusts for theme */
-            color: var(--bg);
-            [data-theme="light"] & {
-                color: #fff; 
-            }
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.3s;
-            box-shadow: 0 5px 20px var(--shadow-glow), 0 5px 20px var(--shadow-glow-secondary);
-            font-size: clamp(0.9rem, 2.5vw, 1rem);
-            border: none;
-            cursor: pointer;
-        }
-        [data-theme="light"] .cta-button {
-            color: #fff;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px var(--shadow-glow), 0 10px 30px var(--shadow-glow-secondary);
-        }
-
-        /* General Section Styling */
-        section {
-            padding: 6rem 0;
-            border-bottom: 1px solid var(--border-glow);
-            transition: border-color 0.3s;
-            position: relative; /* For contact canvas */
-            overflow-x: clip; /* Prevent horizontal scroll */
-        }
-        section:last-of-type {
-            border-bottom: none;
-        }
-
-        h2 {
-            font-size: clamp(2rem, 5vw, 2.8rem);
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* About Section */
-        #about p {
-            font-size: 1.1rem;
-            color: var(--text-dark);
-            max-width: 800px;
-            margin: 0 auto 1.5rem auto;
-            text-align: center;
-            line-height: 1.8;
-            transition: color 0.3s;
-        }
-
-        /* Projects Section */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 15px;
-            border: 1px solid var(--border-glow);
-            padding: 1.5rem;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--shadow-glow);
-        }
-
-        .project-card h3 {
-            color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 0.8rem;
-            transition: color 0.3s;
-        }
-
-        .project-card p {
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-            flex-grow: 1; /* Makes card content fill space */
-            transition: color 0.3s;
-        }
-
-        .project-tags {
-            margin-bottom: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .project-tags .badge {
-            display: inline-block;
-            background: rgba(0, 240, 255, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        [data-theme="light"] .project-tags .badge {
-            background: rgba(0, 119, 255, 0.1);
-            border-color: var(--primary);
-        }
-
-        .project-card .cta-button {
-            padding: 0.6rem 1.5rem;
-            font-size: 0.9rem;
-            align-self: flex-start; /* Aligns button to bottom left */
-        }
-        
-        /* === NEW SKILLS SECTION === */
-        .skill-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .skill-card-container {
-            perspective: 1000px;
-            min-height: 350px;
-        }
-
+        /* Skill card hover effect */
         .skill-card {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 350px;
-            transform-style: preserve-3d;
-            transition: transform 0.8s;
-            border-radius: 15px;
+            background-color: #2b2b2b; /* brand-light-gray */
+            border: 1px solid #444;
+            transition: all 0.3s ease-in-out;
         }
 
-        .skill-card-container:hover .skill-card {
-            transform: rotateY(180deg);
-        }
-
-        .skill-card-front,
-        .skill-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--border-glow);
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .skill-card-front {
-            z-index: 2;
-        }
-        
-        .skill-card-front svg {
-            width: 60px;
-            height: 60px;
-            fill: var(--primary);
-            margin-bottom: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .skill-card-front h3 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-        
-        .skill-card-front p {
-            font-size: 1rem;
-            color: var(--text-dark);
-        }
-
-        .skill-card-back {
-            transform: rotateY(180deg);
-            z-index: 1;
-            align-items: flex-start;
-            justify-content: flex-start;
-        }
-        
-        .skill-card-back h3 {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            width: 100%;
-            text-align: center;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-glow);
-        }
-
-        .skill-card-back ul {
-            list-style: none;
-            width: 100%;
-        }
-        
-        .skill-card-back li {
-            color: var(--text-light);
-            font-size: 1rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-glow);
-        }
-        
-        .skill-card-back li:last-child {
-            border-bottom: none;
-        }
-        
-        .skill-card-back li::before {
-            content: '▹';
-            color: var(--primary);
-            margin-right: 0.5rem;
-        }
-
-        /* === END NEW SKILLS SECTION === */
-
-        /* === NEW CONTACT SECTION (from Event Site) === */
-        #contact {
-            overflow: hidden; /* Contain the 3D animation */
-        }
-        
-        #contact-socials {
-            position: relative;
-            z-index: 1; /* Ensure content is above 3D animation */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 0;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        #contact-socials p {
-            font-size: 1.2rem;
-            color: var(--text-dark); /* Use portfolio's variable */
-            margin-bottom: 3rem;
-            line-height: 1.6;
-            transition: color 0.3s;
-        }
-        .social-links-grid {
-            display: grid;
-            /* Use portfolio's gradient for title */
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2.5rem;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2rem;
-        }
-        .social-link-button {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            /* Use portfolio's variables */
-            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
-            border: 2px solid var(--border-glow);
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-decoration: none;
-            color: var(--primary); /* Use portfolio's primary */
-            transition: all 0.4s ease-in-out;
-            cursor: pointer;
-            overflow: hidden; /* For pseudo-element glow */
-            box-shadow: 0 0 15px var(--shadow-glow);
-            margin: 0 auto; /* Center individual buttons */
-        }
-        .social-link-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: var(--primary-blue-glow);
-            border-radius: 50%;
+        .skill-card .details {
+            visibility: hidden;
             opacity: 0;
-            transform: translate(-50%, -50%);
-            transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
-            z-index: -1;
-        }
-        .social-link-button:hover::before {
-            width: 200%;
-            height: 200%;
-            opacity: 0.3;
-        }
-        .social-link-button:hover {
-            transform: translateY(-8px) scale(1.05);
-            border-color: var(--primary); /* Use portfolio's primary */
-            box-shadow: 0 0 30px var(--shadow-glow);
-            color: #fff;
-            text-shadow: 0 0 10px var(--shadow-glow);
-        }
-        .social-link-button svg {
-            width: 60px;
-            height: 60px;
-            fill: currentColor; /* Inherit color from parent */
-            margin-bottom: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-        .social-link-button:hover svg {
-            transform: scale(1.1);
-        }
-        .social-link-button span {
-            font-size: 1.1rem;
-            font-weight: 600;
-            opacity: 0; /* Hidden by default */
             transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            color: #fff;
+            transition: all 0.3s ease-in-out;
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            white-space: nowrap;
-        }
-        .social-link-button:hover span {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Canvas for 3D animation in contact section */
-        #contact-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.3;
-        }
-        /* === END NEW CONTACT SECTION === */
-
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem 1.5rem;
-            color: var(--text-dark);
-            font-size: 0.9rem;
-            margin-top: 4rem;
-            transition: color 0.3s;
+            inset: 0;
+            background-color: #2b2b2b;
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
         }
         
-        /* Scroll-Reveal Animation */
+        .skill-card .default-content {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .skill-card:hover .details {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-card:hover .default-content {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        /* Project card hover glow */
+        .project-card {
+            transition: all 0.3s ease-in-out;
+            /* Base shadow */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .project-card:hover {
+            /* Glow effect on hover */
+            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2); /* brand-primary with opacity */
+            transform: translateY(-4px); /* A slightly more subtle lift */
+        }
+
+        /* Custom icon styling */
+        .icon {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
+            color: #a0a0a0; /* brand-text-muted */
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover .icon {
+            color: #00aaff; /* brand-primary */
+        }
+
+        /* Enhanced social link hover */
+        .social-link {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            border-radius: 50%; /* Make it circular */
+            padding: 0.75rem; /* p-3 */
+        }
+        .social-link:hover {
+            transform: scale(1.1);
+            background-color: #2b2b2b; /* brand-light-gray */
+        }
+        
+        /* Custom scrollbar (optional, but nice) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2b2b2b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Reveal on scroll animation */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        
         .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Add staggered delay for child elements */
-        .reveal-child {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        /* Custom Cursor Styles */
+        #cursor-dot, #cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.3s ease, transform 0.1s ease;
         }
-        
-        .visible .reveal-child:nth-child(1) { transition-delay: 0.1s; }
-        .visible .reveal-child:nth-child(2) { transition-delay: 0.2s; }
-        .visible .reveal-child:nth-child(3) { transition-delay: 0.3s; }
-        .visible .reveal-child:nth-child(4) { transition-delay: 0.4s; }
-        .visible .reveal-child {
-            opacity: 1;
-            transform: translateY(0);
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00aaff; /* brand-primary */
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            nav {
-                justify-content: space-between;
-                padding: 1rem;
-            }
-
-            /* === HAMBURGER FIX === */
-            /* REMOVED the problematic '.nav-right ul { display: none; }' rule */
-            
-            .menu-toggle {
-                display: flex;
-            }
-
-            /* Mobile nav panel */
-            .nav-links {
-                position: fixed;
-                top: 0;
-                /* Start off-screen (left) */
-                left: -100%; 
-                width: 70%;
-                height: 100vh;
-                background: var(--bg);
-                /* These override the 'nav ul' styles */
-                flex-direction: column; 
-                justify-content: center;
-                align-items: center;
-                gap: 2rem;
-                transition: left 0.5s ease-in-out; 
-                z-index: 100;
-                border-right: 1px solid var(--border-glow);
-                /* This was the missing piece: it inherits 'display: flex' from 'nav ul' */
-                /* but we need to ensure it's positioned correctly */
-            }
-            
-            .nav-links.active {
-                left: 0; /* Slide in from left */
-            }
-
-
-            /* Animate hamburger to 'X' */
-            .menu-toggle.active .bar:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 6px);
-            }
-            .menu-toggle.active .bar:nth-child(2) {
-                opacity: 0;
-            }
-            .menu-toggle.active .bar:nth-child(3) {
-                transform: rotate(-45deg) translate(5px, -6px);
-            }
-            
-            #hero {
-                margin-top: -70px; /* Adjust for smaller nav */
-                height: 90vh;
-            }
-            
-            section {
-                padding: 4rem 0;
-            }
-            
-            h2 {
-                margin-bottom: 2rem;
-            }
-
-            /* Make skill cards stack */
-            .skill-grid {
-                grid-template-columns: 1fr;
-            }
-            .skill-card-container {
-                min-height: 300px;
-            }
-            .skill-card {
-                min-height: 300px;
-            }
-
-            /* Responsive Socials */
-            .social-links-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 1.5rem;
-            }
-            .social-link-button {
-                width: 120px;
-                height: 120px;
-            }
-            .social-link-button svg {
-                width: 45px;
-                height: 45px;
-            }
-            .social-link-button span {
-                font-size: 0.9rem;
+        #cursor-outline {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 170, 255, 0.5); /* brand-primary with opacity */
+        }
+        /* Hide on touch devices */
+        @media (pointer: coarse) {
+            #cursor-dot, #cursor-outline {
+                display: none;
             }
         }
-
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <!-- 3D Particle Background -->
-    <canvas id="particle-canvas"></canvas>
+    <!-- Custom Cursor Elements -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
 
     <!-- Header & Navigation -->
-    <header>
-        <div class="container">
-            <nav>
-                <!-- Left side: Hamburger (mobile) + Logo -->
-                <div class="nav-left">
-                    <div class="menu-toggle" id="menuToggle">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </div>
-                    <a href="#hero" class="nav-logo">Hari L<span>.</span></a>
-                </div>
-
-                <!-- Right side: Nav Links (desktop) + Theme Toggle -->
-                <div class="nav-right">
-                    <ul class="nav-links" id="navLinks">
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                    <!-- Theme Toggle -->
-                    <div class="theme-toggle">
-                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,9c-1.65,0-3,1.35-3,3s1.35,3,3,3s3-1.35,3-3S13.65,9,12,9M12,17c-2.76,0-5-2.24-5-5s2.24-5,5-5s5,2.24,5,5 S14.76,17,12,17M12,3c-0.55,0-1,0.45-1,1v2c0,0.55,0.45,1,1,1s1-0.45,1-1V4C13,3.45,12.55,3,12,3m-7.05,2.05 c-0.39-0.39-1.02-0.39-1.41,0s-0.39,1.02,0,1.41L5,7.83C5.39,8.22,6.02,8.22,6.41,7.83s0.39-1.02,0-1.41L4.95,5.05z M3,12c-0.55,0-1,0.45-1,1s0.45,1,1,1h2c0.55,0,1-0.45,1-1s-0.45-1-1-1H3zM7.83,17.59c-0.39-0.39-1.02-0.39-1.41,0 s-0.39,1.02,0,1.41L7.83,19c0.39,0.39,1.02,0.39,1.41,0s0.39-1.02,0-1.41L7.83,17.59zM12,19c-0.55,0-1,0.45-1,1v2c0,0.55,0.45,1,1,1 s1-0.45,1-1v-2C13,19.45,12.55,19,12,19m7.05-2.05c-0.39-0.39-1.02-0.39-1.41,0s-0.39,1.02,0,1.41L19,17.59c0.39,0.39,1.02,0.39,1.41,0 s0.39-1.02,0-1.41L19.05,16.95zM21,12c0.55,0,1-0.45,1-1s-0.45-1-1-1h-2c-0.55,0-1,0.45-1,1s0.45,1,1,1H21zM16.17,5.05 c0.39-0.39,0.39-1.02,0-1.41s-1.02-0.39-1.41,0L13.34,5.05c-0.39,0.39-0.39,1.02,0,1.41s1.02,0.39,1.41,0L16.17,5.05z"/></svg>
-                        <label class="theme-switch">
-                            <input type="checkbox" id="theme-switch">
-                            <span class="slider"></span>
-                        </label>
-                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4C16.42,4 20,7.58 20,12C20,16.42 16.42,20 12,20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4z"/></svg>
-                    </div>
-                </div>
-            </nav>
+    <header class="fixed top-0 left-0 right-0 z-50 bg-brand-gray bg-opacity-80 backdrop-blur-md border-b border-brand-light-gray">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Your Name -->
+            <a href="#hero" class="text-xl font-bold text-white mobile-link">Hari L.</a>
+            
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex space-x-6">
+                <a href="#about" class="text-brand-text-muted hover:text-white transition-colors">About</a>
+                <a href="#projects" class="text-brand-text-muted hover:text-white transition-colors">Projects</a>
+                <a href="#skills" class="text-brand-text-muted hover:text-white transition-colors">Skills</a>
+                <a href="#contact" class="text-brand-text-muted hover:text-white transition-colors">Contact</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" aria-label="Open menu">
+                    <i data-lucide="menu" class="text-white w-6 h-6"></i>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu (Overlay) -->
+        <div id="mobile-menu" class="hidden fixed inset-0 bg-brand-gray z-40 p-6">
+            <div class="flex justify-between items-center mb-12 container mx-auto">
+                <a href="#hero" class="text-xl font-bold text-white mobile-link">Hari L.</a>
+                <button id="mobile-menu-close" aria-label="Close menu">
+                    <i data-lucide="x" class="text-white w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-8 text-center items-center h-full justify-center -mt-24">
+                <a href="#about" class="text-3xl text-brand-text-muted hover:text-white transition-colors mobile-link">About</a>
+                <a href="#projects" class="text-3xl text-brand-text-muted hover:text-white transition-colors mobile-link">Projects</a>
+                <a href="#skills" class="text-3xl text-brand-text-muted hover:text-white transition-colors mobile-link">Skills</a>
+                <a href="#contact" class="text-3xl text-brand-text-muted hover:text-white transition-colors mobile-link">Contact</a>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="hero" class="reveal">
-        <h1>Hari L</h1>
-        <p>Mechanical Engineering Student | AI Enthusiast | Problem Solver</p>
-        <a href="#projects" class="cta-button">View My Work</a>
-    </section>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pt-24">
 
-    <div class="container">
+        <!-- Section 1: Hero -->
+        <section id="hero" class="min-h-[70vh] flex items-center text-center md:text-left">
+            <div class="max-w-3xl reveal">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4">
+                    Hari L.
+                </h1>
+                <!-- Dynamic Typing Subtitle -->
+                <p class="text-2xl md:text-3xl text-brand-primary font-medium mb-8 min-h-[40px] md:min-h-[48px]">
+                    <span id="typed-subtitle"></span>
+                </p>
+                <a href="#projects" class="inline-block bg-brand-primary text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-opacity-80 transition-all transform hover:scale-105">
+                    View My Work
+                </a>
+            </div>
+        </section>
 
-        <!-- About Section -->
-        <section id="about" class="reveal">
-            <h2>About Me</h2>
-            <p>
-                First-year Mechanical Engineering student passionate about CFD, robotics, and the application of AI in engineering.
-                I thrive on learning new technologies quickly and leading teams to solve complex technical challenges.
-                Currently exploring generative design and AI-driven automation in engineering workflows.
+        <!-- Section 2: About Me -->
+        <section id="about" class="py-24 reveal">
+            <h2 class="text-4xl font-bold text-white mb-8 text-center">About Me</h2>
+            <div class="max-w-3xl mx-auto bg-brand-light-gray p-8 rounded-lg shadow-xl border border-[#444]">
+                <p class="text-lg text-brand-text-muted leading-relaxed">
+                    First-year Mechanical Engineering student passionate about CFD, robotics, and the application of AI in engineering.
+                </p>
+                <br>
+                <p class="text-lg text-brand-text-muted leading-relaxed">
+                    I thrive on learning new technologies quickly and leading teams to solve complex technical challenges.
+                    Currently exploring generative design and AI-driven automation in engineering workflows.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: Projects -->
+        <section id="projects" class="py-24 reveal">
+            <h2 class="text-4xl font-bold text-white mb-12 text-center">Projects</h2>
+            
+            <!-- Project Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Project Card 1 -->
+                <div class="project-card bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-[#444] flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-semibold text-white mb-3">🏆 ASME IMECE BrainBolt 2025</h3>
+                        <p class="text-brand-text-muted mb-4">
+                            Finalist in a 2-week CFD automation hackathon by Ansys/CADFEM. Led R&D for mixing tank optimization and vehicle aerodynamics using PyFluent, despite zero prior CFD experience.
+                        </p>
+                        <!-- Tech Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyFluent</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyAnsys</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CFD</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Aerodynamics</span>
+                        </div>
+                    </div>
+                    <!-- Project Link -->
+                    <div class="p-6 bg-gray-900 bg-opacity-50">
+                        <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" class="font-medium text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View Project 
+                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-[#444] flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-semibold text-white mb-3">🚣 Kayak Paddle Optimization</h3>
+                        <p class="text-brand-text-muted mb-4">
+                            Smart India Hackathon 2025 selected project. Developing user-specific kayak paddle optimization using generative design, biomechanics, and additive manufacturing.
+                        </p>
+                        <!-- Tech Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Fusion 360</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Generative Design</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CAD</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">3D Printing</span>
+                        </div>
+                    </div>
+                    <!-- Project Link -->
+                    <div class="p-6 bg-gray-900 bg-opacity-50">
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View Project 
+                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-[#444] flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-semibold text-white mb-3">🤖 Smart Glass Cleaning Robot</h3>
+                        <p class="text-brand-text-muted mb-4">
+                            Designed and prototyped a fully automated glass cleaning robot within 100cm³ size constraints. Focused on compact mechanical design and automation logic.
+                        </p>
+                        <!-- Tech Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Robotics</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Automation</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Mechanical Design</span>
+                        </div>
+                    </div>
+                    <!-- Project Link -->
+                    <div class="p-6 bg-gray-900 bg-opacity-50">
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View Project 
+                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Project Card 4 (from IoT) -->
+                <div class="project-card bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-[#444] flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-semibold text-white mb-3">⚙️ IoT & Embedded Projects</h3>
+                        <p class="text-brand-text-muted mb-4">
+                            Pre-college hobby projects exploring embedded systems and IoT applications using Arduino and ESP8266, building a foundation for automation and smart devices.
+                        </p>
+                        <!-- Tech Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Arduino</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">ESP8266</span>
+                            <span class="bg-gray-700 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">IoT</span>
+                        </div>
+                    </div>
+                    <!-- Project Link -->
+                    <div class="p-6 bg-gray-900 bg-opacity-50">
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View Project 
+                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 4: Technical Skills -->
+        <section id="skills" class="py-24 reveal">
+            <h2 class="text-4xl font-bold text-white mb-12 text-center">Technical Skills</h2>
+            
+            <!-- Skills Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Skill Card 1 -->
+                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
+                    <!-- Default Content -->
+                    <div class="default-content text-center">
+                        <i data-lucide="cpu" class="w-12 h-12 text-brand-primary mx-auto mb-4"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Simulation & Analysis</h3>
+                        <p class="text-sm text-brand-text-muted">(Hover to see details)</p>
+                    </div>
+                    <!-- Hover Content -->
+                    <div class="details">
+                        <h3 class="text-xl font-semibold text-white mb-4">Simulation & Analysis</h3>
+                        <ul class="list-disc list-inside text-left text-brand-text-muted space-y-1">
+                            <li>CFD Analysis</li>
+                            <li>PyFluent</li>
+                            <li>PyAnsys</li>
+                            <li>ANSYS Fluent</li>
+                            <li>Aerodynamics</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Skill Card 2 -->
+                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
+                    <!-- Default Content -->
+                    <div class="default-content text-center">
+                        <i data-lucide="printer" class="w-12 h-12 text-brand-primary mx-auto mb-4"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Design & Manufacturing</h3>
+                        <p class="text-sm text-brand-text-muted">(Hover to see details)</p>
+                    </div>
+                    <!-- Hover Content -->
+                    <div class="details">
+                        <h3 class="text-xl font-semibold text-white mb-4">Design & Manufacturing</h3>
+                        <ul class="list-disc list-inside text-left text-brand-text-muted space-y-1">
+                            <li>Fusion 360</li>
+                            <li>Generative Design</li>
+                            <li>CAD Design</li>
+                            <li>3D Printing</li>
+                            <li>Mechanical Design</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Skill Card 3 -->
+                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
+                    <!-- Default Content -->
+                    <div class="default-content text-center">
+                        <i data-lucide="code" class="w-12 h-12 text-brand-primary mx-auto mb-4"></i>
+                        <h3 class="text-xl font-semibold text-white mb-2">Automation & Robotics</h3>
+                        <p class="text-sm text-brand-text-muted">(Hover to see details)</p>
+                    </div>
+                    <!-- Hover Content -->
+                    <div class="details">
+                        <h3 class="text-xl font-semibold text-white mb-4">Automation & Robotics</h3>
+                        <ul class="list-disc list-inside text-left text-brand-text-muted space-y-1">
+                            <li>Python</li>
+                            <li>Automation Scripts</li>
+                            <li>Robotics</li>
+                            <li>Embedded Systems</li>
+                            <li>Arduino / ESP8266</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- Section 5: Contact -->
+        <section id="contact" class="py-24 text-center reveal">
+            <h2 class="text-4xl font-bold text-white mb-6">Get In Touch</h2>
+            <p class="text-lg text-brand-text-muted max-w-2xl mx-auto mb-10">
+                I'm always interested in connecting with fellow engineering enthusiasts, mentors, and collaborators. Feel free to reach out!
             </p>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="reveal">
-            <h2>Projects</h2>
-            <div class="project-grid">
-                
-                <!-- Project 1 -->
-                <div class="project-card reveal-child">
-                    <h3>🏆 ASME IMECE BrainBolt 2025</h3>
-                    <p>Finalist in a 2-week CFD automation hackathon by Ansys/CADFEM. Led R&D for mixing tank optimization and vehicle aerodynamics using PyFluent, despite zero prior CFD experience.</p>
-                    <div class="project-tags">
-                        <span class="badge">PyFluent</span>
-                        <span class="badge">PyAnsys</span>
-                        <span class="badge">CFD</span>
-                        <span class="badge">Python</span>
-                        <span class="badge">Aerodynamics</span>
-                    </div>
-                    <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" target="_blank" class="cta-button">View Project</a>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="project-card reveal-child">
-                    <h3>🚣 Kayak Paddle Optimization</h3>
-                    <p>Smart India Hackathon 2025 selected project. Developing user-specific kayak paddle optimization using generative design, biomechanics, and additive manufacturing.</p>
-                    <div class="project-tags">
-                        <span class="badge">Fusion 360</span>
-                        <span class="badge">Generative Design</span>
-                        <span class="badge">CAD</span>
-                        <span class="badge">3D Printing</span>
-                    </div>
-                    <!-- Using your main GitHub as a placeholder -->
-                    <a href="https://github.com/DEFAULTE-R" target="_blank" class="cta-button">View Project</a>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="project-card reveal-child">
-                    <h3>🤖 Smart Glass Cleaning Robot</h3>
-                    <p>Designed and prototyped a fully automated glass cleaning robot within 100cm³ size constraints. Focused on compact mechanical design and automation logic.</p>
-                    <div class="project-tags">
-                        <span class="badge">Robotics</span>
-                        <span class="badge">Automation</span>
-                        <span class="badge">Mechanical Design</span>
-                    </div>
-                    <a href="https://github.com/DEFAULTE-R" target="_blank" class="cta-button">View Project</a>
-                </div>
-                
-                <!-- Project 4 -->
-                <div class="project-card reveal-child">
-                    <h3>⚙️ IoT & Embedded Projects</h3>
-                    <p>Pre-college hobby projects exploring embedded systems and IoT applications using Arduino and ESP8266, building a foundation for automation and smart devices.</p>
-                    <div class="project-tags">
-                        <span class="badge">Arduino</span>
-                        <span class="badge">ESP8266</span>
-                        <span class="badge">IoT</span>
-                    </div>
-                    <a href="https://github.com/DEFAULTE-R" target="_blank" class="cta-button">View Project</a>
-                </div>
-
+            
+            <!-- Social Links -->
+            <div class="flex justify-center space-x-4 md:space-x-8">
+                <a href="mailto:harilogesh2019@gmail.com" class="social-link" aria-label="Email">
+                    <i data-lucide="mail" class="icon"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/haril2019" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                    <i data-lucide="linkedin" class="icon"></i>
+                </a>
+                <a href="https://github.com/DEFAULTE-R" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                    <i data-lucide="github" class="icon"></i>
+                </a>
             </div>
         </section>
-
-        <!-- Skills Section -->
-        <section id="skills" class="reveal">
-            <h2>Technical Skills</h2>
-            
-            <!-- === NEW SKILLS UI === -->
-            <div class="skill-grid">
-                
-                <!-- Skill Card 1: Simulation -->
-                <div class="skill-card-container reveal-child">
-                    <div class="skill-card">
-                        <div class="skill-card-front">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M16.2,12.2c0.2-0.2,0.2-0.5,0-0.7l-6-6c-0.2-0.2-0.5-0.2-0.7,0s-0.2,0.5,0,0.7l6,6C15.7,12.4,16,12.4,16.2,12.2z M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,20c-4.4,0-8-3.6-8-8s3.6-8,8-8s8,3.6,8,8S16.4,20,12,20z M17,14c-1.7,0-3-1.3-3-3s1.3-3,3-3s3,1.3,3,3S18.7,14,17,14z M17,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S17.6,10,17,10z"/></svg>
-                            <h3>Simulation & Analysis</h3>
-                            <p>(Hover to see details)</p>
-                        </div>
-                        <div class="skill-card-back">
-                            <h3>Simulation & Analysis</h3>
-                            <ul>
-                                <li>CFD Analysis</li>
-                                <li>PyFluent</li>
-                                <li>PyAnsys</li>
-                                <li>ANSYS Fluent</li>
-                                <li>Aerodynamics</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Skill Card 2: Design -->
-                <div class="skill-card-container reveal-child">
-                    <div class="skill-card">
-                        <div class="skill-card-front">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12.1,18.9L9.3,16.1c-0.4-0.4-1-0.4-1.4,0l-3.8,3.8c-0.2,0.2-0.2,0.5,0,0.7l1.1,1.1c0.2,0.2,0.5,0.2,0.7,0l3.8-3.8 c0.4-0.4,0.4-1,0-1.4L8.3,15.1l2.8,2.8c0.4,0.4,1,0.4,1.4,0l3.8-3.8c0.2-0.2,0.2-0.5,0-0.7l-1.1-1.1c-0.2-0.2-0.5-0.2-0.7,0 l-3.8,3.8C12.5,16.5,11.9,16.5,11.5,16.1z M21.7,5.3l-1.1-1.1c-0.2-0.2-0.5-0.2-0.7,0l-3.8,3.8c-0.4,0.4-0.4,1,0,1.4l2.8,2.8 l-1.4,1.4c-0.4,0.4-0.4,1,0,1.4l3.8,3.8c0.2,0.2,0.5,0.2,0.7,0l1.1-1.1c0.2-0.2,0.2-0.5,0-0.7L19.4,13l3.8-3.8 c0.4-0.4,0.4-1,0-1.4L20.4,5l1.3-1.3C21.9,3.5,22,3.1,22,2.8C22,2.6,21.9,2.4,21.7,2.3z M15.1,8.3l1.4,1.4l-2.8,2.8 c-0.4,0.4-1,0.4-1.4,0L8.5,8.7l2.8-2.8c0.4-0.4,1-0.4,1.4,0l-3.8,3.8c-0.2,0.2-0.2,0.5,0,0.7l1.1,1.1c0.2,0.2,0.5,0.2,0.7,0 l3.8-3.8C15.5,7.3,16.1,7.3,16.5,7.7z"/></svg>
-                            <h3>Design & Manufacturing</h3>
-                            <p>(Hover to see details)</p>
-                        </div>
-                        <div class="skill-card-back">
-                            <h3>Design & Manufacturing</h3>
-                            <ul>
-                                <li>Fusion 360</li>
-                                <li>Generative Design</li>
-                                <li>CAD Design</li>
-                                <li>3D Printing</li>
-                                <li>Mechanical Design</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Skill Card 3: Automation -->
-                <div class="skill-card-container reveal-child">
-                    <div class="skill-card">
-                        <div class="skill-card-front">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M19.9,12.6c-0.2,0-0.4,0.1-0.6,0.2c-0.7-1.1-1.6-2-2.7-2.7c0.1-0.2,0.2-0.4,0.2-0.6c0-0.8-0.7-1.5-1.5-1.5 c-0.6,0-1.2,0.4-1.4,0.9c-0.8-0.2-1.6-0.3-2.4-0.3s-1.7,0.1-2.4,0.3C8.9,8.4,8.4,8,7.8,8c-0.8,0-1.5,0.7-1.5,1.5 c0,0.2,0.1,0.4,0.2,0.6c-1.1,0.7-2,1.6-2.7,2.7C3.6,12.7,3.4,12.6,3.2,12.6c-0.8,0-1.5,0.7-1.5,1.5s0.7,1.5,1.5,1.5 c0.2,0,0.4-0.1,0.6-0.2c0.7,1.1,1.6,2,2.7,2.7C6.4,18.2,6.2,18.4,6.2,18.6c0,0.8,0.7,1.5,1.5,1.5c0.6,0,1.2-0.4,1.4-0.9 c0.8,0.2,1.6,0.3,2.4,0.3s1.7-0.1,2.4-0.3c0.3,0.5,0.8,0.9,1.4,0.9c0.8,0,1.5-0.7,1.5-1.5c0-0.2-0.1-0.4-0.2-0.6 c1.1-0.7,2-1.6,2.7-2.7c0.2,0.2,0.4,0.2,0.6,0.2c0.8,0,1.5-0.7,1.5-1.5S20.8,12.6,19.9,12.6z M12,17c-2.8,0-5-2.2-5-5s2.2-5,5-5 s5,2.2,5,5S14.8,17,12,17z M12,9c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S13.7,9,12,9z"/></svg>
-                            <h3>Automation & Robotics</h3>
-                            <p>(Hover to see details)</p>
-                        </div>
-                        <div class="skill-card-back">
-                            <h3>Automation & Robotics</h3>
-                            <ul>
-                                <li>Python</li>
-                                <li>Automation Scripts</li>
-                                <li>Robotics</li>
-                                <li>Embedded Systems</li>
-                                <li>Arduino / ESP8266</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <!-- === END NEW SKILLS UI === -->
-            
-        </section>
-
-        <!-- === MODIFIED CONTACT SECTION === -->
-        <section id="contact" class="reveal">
-            <!-- Canvas for 3D animation -->
-            <canvas id="contact-canvas"></canvas> 
-            
-            <div id="contact-socials">
-                <h2>Get In Touch</h2>
-                <p>I'm always interested in connecting with fellow engineering enthusiasts, mentors, and collaborators. Feel free to reach out!</p>
-                <div class="social-links-grid">
-                    
-                    <!-- Email -->
-                    <a href="mailto:harilogesh2019@gmail.com" class="social-link-button reveal-child">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.00977 5.83688C3.00977 4.68028 3.89005 3.80001 5.04665 3.80001H18.9531C20.1097 3.80001 20.99 4.68028 20.99 5.83688V17.8631C20.99 19.0197 20.1097 19.9 18.9531 19.9H5.04665C3.89005 19.9 3.00977 19.0197 3.00977 17.8631V5.83688ZM5.04665 5.30001C4.74312 5.30001 4.50977 5.53336 4.50977 5.83688V17.8631C4.50977 18.1666 4.74312 18.4 5.04665 18.4H18.9531C19.2567 18.4 19.49 18.1666 19.49 17.8631V5.83688C19.49 5.53336 19.2567 5.30001 18.9531 5.30001H5.04665ZM5.8335 6.61114C5.52044 6.43843 5.12761 6.5501 4.9549 6.86316C4.78219 7.17622 4.89386 7.56905 5.20692 7.74176L11.5173 11.2348C11.8037 11.401 12.196 11.401 12.4824 11.2348L18.7928 7.74176C19.1059 7.56905 19.2176 7.17622 19.0448 6.86316C18.8721 6.5501 18.4793 6.43843 18.1662 6.61114L11.9999 10.0381L5.8335 6.61114Z" fill="currentColor"/></svg>
-                        <span>Email</span>
-                    </a>
-                    
-                    <!-- LinkedIn -->
-                    <a href="https://www.linkedin.com/in/haril2019" target="_blank" class="social-link-button reveal-child">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.9 3H4.1C3.49249 3 3 3.49249 3 4.1V19.9C3 20.5075 3.49249 21 4.1 21H19.9C20.5075 21 21 20.5075 21 19.9V4.1C21 3.49249 20.5075 3 19.9 3ZM8.39999 18.3H5.59999V9.6H8.39999V18.3ZM7 8.5C6.17157 8.5 5.5 7.82843 5.5 7C5.5 6.17157 6.17157 5.5 7 5.5C7.82843 5.5 8.5 6.17157 8.5 7C8.5 7.82843 7.82843 8.5 7 8.5ZM18.4 18.3H15.6V14.1C15.6 13.09 15.6 11.7 14.3 11.7C12.9 11.7 12.7 12.8 12.7 14V18.3H9.89999V9.6H12.6V10.9H12.6C13 10.3 14 9.4 15.2 9.4C18 9.4 18.4 11.3 18.4 13.6V18.3Z" fill="currentColor"/></svg>
-                        <span>LinkedIn</span>
-                    </a>
-                    
-                    <!-- GitHub -->
-                    <a href="https://github.com/DEFAULTE-R" target="_blank" class="social-link-button reveal-child">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C7.0275 3 3 7.0275 3 12C3 16.0125 5.58 19.3425 9.0975 20.655C9.5775 20.745 9.75 20.445 9.75 20.175C9.75 19.935 9.735 19.155 9.735 18.27C7.5 18.72 6.93 17.235 6.93 17.235C6.51 16.2 5.97 15.9 5.97 15.9C5.145 15.345 6.03 15.36 6.03 15.36C6.915 15.42 7.395 16.23 7.395 16.23C8.175 17.58 9.495 17.175 10.02 16.92C10.095 16.38 10.32 16.005 10.56 15.81C8.445 15.57 6.21 14.715 6.21 11.22C6.21 10.23 6.555 9.405 7.11 8.76C6.99 8.52 6.645 7.5 7.23 6.3C7.23 6.3 8.01 6.06 9.72 7.26C10.47 7.065 11.25 6.975 12 6.975C12.75 6.975 13.53 7.065 14.28 7.26C15.99 6.06 16.77 6.3 16.77 6.3C17.355 7.5 17.01 8.52 16.89 8.76C17.445 9.405 17.79 10.23 17.79 11.22C17.79 14.73 15.555 15.57 13.44 15.81C13.725 16.05 13.98 16.515 13.98 17.235C13.98 18.285 13.965 19.74 13.965 20.175C13.965 20.445 14.13 20.745 14.61 20.655C18.12 19.3425 20.7 16.0125 20.7 12C20.7 7.0275 16.6725 3 12 3Z" fill="currentColor"/></svg>
-                        <span>GitHub</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-        <!-- === END MODIFIED CONTACT SECTION === -->
-
-    </div>
+    </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Hari L. Built with passion and precision.</p>
+    <footer class="border-t border-brand-light-gray mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-brand-text-muted">
+            © 2025 Hari L. Built with passion and precision.
+        </div>
     </footer>
 
+    <!-- Load Typed.js for typing animation -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+    <!-- Initialize Lucide Icons & Custom JS -->
     <script>
-        // --- 3D Particle Animation (Global) ---
-        let scene, camera, renderer, particles;
-        
-        function initParticles() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('particle-canvas'), alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x000000, 0); // Transparent background
-
-            const particleCount = 5000;
-            const positions = new Float32Array(particleCount * 3);
-            
-            for (let i = 0; i < particleCount * 3; i++) {
-                positions[i] = (Math.random() - 0.5) * 10;
-            }
-            
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            
-            const material = new THREE.PointsMaterial({
-                color: 0x00f0ff, // --primary color (will be overridden by theme in light mode if needed)
-                size: 0.02,
-                transparent: true,
-                opacity: 0.7,
-                blending: THREE.AdditiveBlending
-            });
-            // Update particle color based on theme
-            if (document.documentElement.getAttribute('data-theme') === 'light') {
-                material.color.set(0x0077ff); // Light mode primary
-            }
-            
-            particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
-            animateParticles();
-        }
-
-        function animateParticles() {
-            requestAnimationFrame(animateParticles);
-            if (particles) {
-                particles.rotation.y += 0.0003;
-                particles.rotation.x += 0.0001;
-            }
-            if (renderer) {
-                renderer.render(scene, camera);
-            }
-        }
-
-        function onWindowResize() {
-            if (camera) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-            }
-            if (renderer) {
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-        }
-
-        window.addEventListener('resize', onWindowResize);
-        // Ensure particle init runs after DOM is ready
-        document.addEventListener('DOMContentLoaded', initParticles);
-
-
-        // --- Scroll-Reveal Animation ---
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1 // Trigger when 10% of the element is visible
-        });
-
-        const revealElements = document.querySelectorAll('.reveal');
-        revealElements.forEach(el => revealObserver.observe(el));
-
-
-        // --- Mobile Navigation ---
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-        });
-
-        // Close nav when a link is clicked
-        document.querySelectorAll('#navLinks a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuToggle.classList.remove('active');
-            });
-        });
-
-        
-        // --- Theme Toggle Logic ---
-        const themeSwitch = document.getElementById('theme-switch');
-        
-        // Set initial checkbox state based on current theme
-        if (document.documentElement.getAttribute('data-theme') === 'light') {
-            themeSwitch.checked = true;
-        }
-
-        themeSwitch.addEventListener('change', function(e) {
-            let newColor;
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                newColor = 0x0077ff; // Light mode particle color
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // --- Initialize Lucide Icons ---
+            // This needs to run after the lucide.js script is loaded and the DOM is ready.
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                newColor = 0x00f0ff; // Dark mode particle color
+                console.error('Lucide library not loaded. Check script src.');
             }
-            // Update particle color
-            if(particles) particles.material.color.set(newColor);
-            // Update cube color
-            if(cubeLines) cubeLines.material.color.set(newColor);
-        });
 
+            // --- Mobile Menu Toggle ---
+            const menuButton = document.getElementById('mobile-menu-button');
+            const closeButton = document.getElementById('mobile-menu-close');
+            const menu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
 
-        // --- Smooth Scrolling for all anchor links ---
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if(targetElement) {
-                    // Calculate offset for sticky nav
-                    const headerOffset = document.querySelector('header').offsetHeight;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            if (menuButton && closeButton && menu) {
+                menuButton.addEventListener('click', () => {
+                    menu.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+                });
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
+                closeButton.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable scrolling
+                });
+
+                // Close menu when a link is clicked (for single-page nav)
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.add('hidden');
+                        document.body.style.overflow = ''; // Re-enable scrolling
                     });
+                });
+            }
+
+            // --- Reveal on Scroll Animation ---
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // We can unobserve it if we only want the animation once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is in view
+            });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Initialize Typing Animation ---
+            if (typeof Typed !== 'undefined') {
+                new Typed('#typed-subtitle', {
+                    strings: [
+                        'Mechanical Engineering Student',
+                        'AI Enthusiast',
+                        'Problem Solver'
+                    ],
+                    typeSpeed: 50,
+                    backSpeed: 30,
+                    backDelay: 2000,
+                    loop: true,
+                    smartBackspace: true
+                });
+            } else {
+                console.error('Typed.js library not loaded.');
+            }
+
+            // --- Custom Cursor Logic ---
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+            
+            window.addEventListener('mousemove', (e) => {
+                if (cursorDot && cursorOutline) {
+                    cursorDot.style.left = e.clientX + 'px';
+                    cursorDot.style.top = e.clientY + 'px';
+                    
+                    cursorOutline.style.left = e.clientX + 'px';
+                    cursorOutline.style.top = e.clientY + 'px';
                 }
             });
-        });
 
-        
-        // --- Contact Section 3D Animation (Glowing Cube) ---
-        let contactScene, contactCamera, contactRenderer, cubeLines;
-
-        function initContactAnimation() {
-            const canvas = document.getElementById('contact-canvas');
-            if (!canvas) return; // Don't run if canvas not found
-
-            contactScene = new THREE.Scene();
-            
-            // Use the section's dimensions
-            const section = document.getElementById('contact');
-            const width = section.clientWidth;
-            const height = section.clientHeight;
-
-            contactCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-            contactRenderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            contactRenderer.setSize(width, height);
-            contactRenderer.setClearColor(0x000000, 0); // Transparent background
-
-            const geometry = new THREE.BoxGeometry(2, 2, 2);
-            
-            let initialColor = document.documentElement.getAttribute('data-theme') === 'light' ? 0x0077ff : 0x00f0ff;
-
-            const material = new THREE.LineBasicMaterial({
-                color: initialColor,
-            });
-            
-            const edges = new THREE.EdgesGeometry(geometry);
-            cubeLines = new THREE.LineSegments(edges, material);
-            contactScene.add(cubeLines);
-
-            contactCamera.position.z = 3.5;
-
-            animateContact();
-        }
-
-        function animateContact() {
-            if (!cubeLines) return; // Stop if not initialized
-            requestAnimationFrame(animateContact);
-            
-            cubeLines.rotation.x += 0.002;
-            cubeLines.rotation.y += 0.003;
-            
-            contactRenderer.render(contactScene, contactCamera);
-        }
-
-        function onContactWindowResize() {
-            const section = document.getElementById('contact');
-            if (contactCamera && contactRenderer && section) {
-                const width = section.clientWidth;
-                const height = section.clientHeight;
-
-                contactCamera.aspect = width / height;
-                contactCamera.updateProjectionMatrix();
-                contactRenderer.setSize(width, height);
+            // --- Hero Fade-on-Scroll ---
+            const heroSection = document.getElementById('hero');
+            if (heroSection) {
+                window.addEventListener('scroll', () => {
+                    const scrollPosition = window.scrollY;
+                    const heroHeight = heroSection.offsetHeight;
+                    // Start fading after scrolling a bit, and be fully faded by 50% of hero height
+                    const fadeStart = heroHeight * 0.1;
+                    const fadeEnd = heroHeight * 0.5;
+                    
+                    if (scrollPosition > fadeStart) {
+                        const opacity = 1 - (scrollPosition - fadeStart) / (fadeEnd - fadeStart);
+                        heroSection.style.opacity = Math.max(0, Math.min(1, opacity));
+                    } else {
+                        heroSection.style.opacity = 1;
+                    }
+                });
             }
-        }
-
-        window.addEventListener('resize', onContactWindowResize);
-        // Delay init to make sure section has dimensions
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(initContactAnimation, 100);
         });
-
     </script>
 </body>
 </html>
