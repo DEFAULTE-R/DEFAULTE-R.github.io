@@ -1,18 +1,19 @@
-
 <!DOCTYPE html>
-<!-- Add dark class here dynamically -->
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-M">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hari L, a first-year Mechanical Engineering student specializing in CFD, robotics, and AI. View my engineering projects and skills.">
     <title>Hari L - Engineering Portfolio</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Load Icons (Lucide) - Corrected UMD build -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <!-- Load Three.js for 3D animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
+        // ⭐️ 2. ENHANCED: Tailwind config with full Light/Dark mode palette
+        // This gives you more control and ensures consistency.
         tailwind.config = {
             theme: {
                 extend: {
@@ -20,575 +21,399 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        // These are now primarily for dark mode
-                        'brand-gray': '#1a1a1a',
-                        'brand-light-gray': '#2b2b2b',
-                        'brand-text': '#f0f0f0',
-                        'brand-text-muted': '#a0a0a0',
-                        'brand-primary': '#00aaff',
+                        // Light Mode
+                        'light-bg': '#f8f9fa',       // Very light gray (was white)
+                        'light-card': '#ffffff',     // White
+                        'light-text': '#111827',     // Dark gray
+                        'light-text-muted': '#4b5563', // Medium gray
+                        'light-primary': '#2563eb',  // Blue-600
+                        'light-border': '#e5e7eb',   // Gray-200
+
+                        // Dark Mode
+                        'dark-bg': '#1a1a1a',          // brand-gray
+                        'dark-card': '#2b2b2b',        // brand-light-gray
+                        'dark-text': '#f0f0f0',        // brand-text
+                        'dark-text-muted': '#a0a0a0',   // brand-text-muted
+                        'dark-primary': '#00aaff',     // brand-primary
+                        'dark-border': '#444444',      // Dark border
                     }
                 },
             },
             darkMode: 'class', // Enable class-based dark mode
         }
     </script>
-    <!-- Custom styles for card hover effects (inspired by the reference) -->
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
             /* Default to Light Mode */
-            background-color: #ffffff;
-            color: #111827; /* gray-900 */
+            background-color: theme('colors.light-bg');
+            color: theme('colors.light-text');
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Dark Mode styles */
         body.dark {
-            background-color: #1a1a1a; /* brand-gray */
-            color: #f0f0f0; /* brand-text */
+            background-color: theme('colors.dark-bg');
+            color: theme('colors.dark-text');
         }
 
-        /* Skill card hover effect */
+        /* ⭐️ 3. UPDATED: Skill card is no longer hover-to-reveal */
         .skill-card {
-            /* Light Mode */
-            background-color: #f9fafb; /* gray-50 */
-            border: 1px solid #e5e7eb; /* gray-200 */
+            background-color: theme('colors.light-card');
+            border: 1px solid theme('colors.light-border');
             transition: all 0.3s ease-in-out;
-        }
-        /* Dark Mode */
-        .dark .skill-card {
-            background-color: #2b2b2b; /* brand-light-gray */
-            border: 1px solid #444;
-        }
-
-        .skill-card .details {
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease-in-out;
-            position: absolute;
-            inset: 0;
-            /* Light Mode */
-            background-color: #f9fafb; /* gray-50 */
             padding: 1.5rem; /* p-6 */
             border-radius: 0.5rem; /* rounded-lg */
-            /* --- FIX: Added overflow-y: auto --- */
-            overflow-y: auto;
         }
-        /* Dark Mode */
-        .dark .skill-card .details {
-            background-color: #2b2b2b;
+        .dark .skill-card {
+            background-color: theme('colors.dark-card');
+            border: 1px solid theme('colors.dark-border');
         }
-        
-        .skill-card .default-content {
-            transition: all 0.3s ease-in-out;
+        /* Simple hover for professional polish */
+        .skill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
-
-        .skill-card:hover .default-content {
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(-10px);
+        .dark .skill-card:hover {
+            box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.1); /* dark-primary glow */
         }
 
-        .skill-card:hover .details {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
 
         /* Project card hover glow */
         .project-card {
+            background-color: theme('colors.light-card');
+            border: 1px solid theme('colors.light-border');
             transition: all 0.3s ease-in-out;
-            /* Base shadow (Light) */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
-        /* Dark Mode */
         .dark .project-card {
-             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            background-color: theme('colors.dark-card');
+            border: 1px solid theme('colors.dark-border');
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
 
         .project-card:hover {
-            /* Glow effect on hover */
-            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2); /* brand-primary with opacity */
-            /* --- FIX: Added scale transform --- */
+            /* Glow effect on hover (Light) */
+            box-shadow: 0 0 20px 5px rgba(37, 99, 235, 0.15); /* light-primary with opacity */
             transform: translateY(-4px) scale(1.03);
         }
+        .dark .project-card:hover {
+            /* Glow effect on hover (Dark) */
+            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2); /* dark-primary with opacity */
+        }
         
-        /* Mobile :active state for tap feedback */
         .project-card:active {
             transform: translateY(0px) scale(0.98);
-            box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.15);
         }
-
-        /* Custom cursor styling */
-        #cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            /* Light Mode */
-            background-color: #111827; /* gray-900 */
-            border-radius: 50%;
-            left: 0;
-            top: 0;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
-            z-index: 9999;
-        }
-        .dark #cursor-dot {
-            background-color: #f0f0f0; /* brand-text */
-        }
-        
-        #cursor-outline {
-            position: fixed;
-            width: 40px;
-            height: 40px;
-            /* Light Mode */
-            border: 2px solid rgba(17, 24, 39, 0.4); /* gray-900 with opacity */
-            border-radius: 50%;
-            left: 0;
-            top: 0;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, border-color 0.3s;
-            z-index: 9999;
-        }
-        .dark #cursor-outline {
-            border: 2px solid rgba(240, 240, 240, 0.4); /* brand-text with opacity */
-        }
-
-        /* Cursor hover state */
-        #cursor-dot.cursor-hover {
-            width: 4px;
-            height: 4px;
-            /* Light Mode */
-            background-color: #2563eb; /* blue-600 */
-        }
-        .dark #cursor-dot.cursor-hover {
-            background-color: #00aaff; /* brand-primary */
-        }
-        #cursor-outline.cursor-hover {
-            width: 50px;
-            height: 50px;
-            /* Light Mode */
-            border-color: rgba(59, 130, 246, 0.5); /* blue-500 with opacity */
-        }
-        .dark #cursor-outline.cursor-hover {
-            border-color: rgba(0, 170, 255, 0.5); /* brand-primary with opacity */
-        }
-
 
         /* Social icon hover effect */
         .social-link .icon {
             width: 32px;
             height: 32px;
+            color: theme('colors.light-text-muted');
             transition: all 0.3s ease;
         }
+        .dark .social-link .icon {
+            color: theme('colors.dark-text-muted');
+        }
         .social-link:hover .icon {
-            /* Light Mode */
-            color: #2563eb; /* blue-600 */
+            color: theme('colors.light-primary');
             transform: scale(1.2);
         }
         .dark .social-link:hover .icon {
-            color: #00aaff; /* brand-primary */
+            color: theme('colors.dark-primary');
         }
 
-        /* Custom scrollbar (optional, but nice) */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e5e7eb; /* gray-200 */
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: #2b2b2b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #9ca3af; /* gray-400 */
-            border-radius: 4px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #555;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280; /* gray-500 */
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #777;
-        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: theme('colors.light-border'); }
+        .dark ::-webkit-scrollbar-track { background: theme('colors.dark-card'); }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #555; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #777; }
 
         /* Reveal on scroll animation */
         .reveal, .reveal-left, .reveal-right {
             opacity: 0;
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        
-        .reveal {
-            transform: translateY(30px);
-        }
-        .reveal-left {
-            transform: translateX(-30px);
-        }
-        .reveal-right {
-            transform: translateX(30px);
-        }
-
+        .reveal { transform: translateY(30px); }
+        .reveal-left { transform: translateX(-30px); }
+        .reveal-right { transform: translateX(30px); }
         .reveal.visible, .reveal-left.visible, .reveal-right.visible {
             opacity: 1;
             transform: translate(0, 0);
         }
 
-        /* Hide custom cursor on mobile */
-        @media (max-width: 768px) {
-            #cursor-dot, #cursor-outline {
-                display: none;
-            }
-        }
-
-        /* 3D Canvas style */
-        #contact-canvas {
+        /* ⭐️ 4. ADDED: 3D Canvas Styles */
+        .three-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: 0; /* Behind content */
+        }
+        /* Ensure section content is on top */
+        section {
+            position: relative;
         }
     </style>
 </head>
-<!-- Apply light/dark class to body -->
+
 <body class="antialiased"> 
 
-    <!-- Custom Cursor Elements -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-outline"></div>
-
-    <!-- Header & Navigation -->
-    <!-- Light Mode: bg-white/80, border-gray-200. Dark Mode: bg-brand-gray/80, border-brand-light-gray -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-brand-gray/80 backdrop-blur-md border-b border-gray-200 dark:border-brand-light-gray">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-light-card/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-light-border dark:border-dark-border">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- Your Name -->
-            <a href="#hero" class="text-xl font-bold text-gray-900 dark:text-white mobile-link">Hari L</a>
+            <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link">Hari L</a>
             
-            <!-- Desktop Nav Links -->
             <div class="hidden md:flex items-center space-x-6">
-                <!-- Light Mode: text-gray-600 hover:text-gray-900. Dark Mode: text-brand-text-muted hover:text-white -->
-                <a href="#about" class="text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors">About</a>
-                <a href="#projects" class="text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors">Projects</a>
-                <a href="#skills" class="text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors">Skills</a>
-                <a href="#contact" class="text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors">Contact</a>
+                <a href="#about" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">About</a>
+                <a href="#projects" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Projects</a>
+                <a href="#skills" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Skills</a>
+                <a href="#contact" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Contact</a>
                 
-                <!-- Theme Toggle Button -->
-                <button id="theme-toggle-button" class="text-gray-600 dark:text-brand-text-muted hover:text-gray-900 dark:hover:text-white" aria-label="Toggle theme">
+                <button id="theme-toggle-button" class="text-light-text-muted dark:text-dark-text-muted hover:text-light-text dark:hover:text-dark-text" aria-label="Toggle theme">
                     <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5"></i>
                     <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5 hidden"></i>
                 </button>
             </div>
             
-            <!-- Mobile Menu Button -->
             <div class="md:hidden flex items-center space-x-4">
-                <!-- Theme Toggle Button (Mobile) -->
-                <button id="theme-toggle-button-mobile" class="text-gray-900 dark:text-white" aria-label="Toggle theme">
+                <button id="theme-toggle-button-mobile" class="text-light-text dark:text-dark-text" aria-label="Toggle theme">
                     <i id="theme-icon-sun-mobile" data-lucide="sun" class="w-6 h-6"></i>
                     <i id="theme-icon-moon-mobile" data-lucide="moon" class="w-6 h-6 hidden"></i>
                 </button>
                 <button id="mobile-menu-button" aria-label="Open menu">
-                    <i data-lucide="menu" class="text-gray-900 dark:text-white w-6 h-6"></i>
+                    <i data-lucide="menu" class="text-light-text dark:text-dark-text w-6 h-6"></i>
                 </button>
             </div>
         </nav>
         
-        <!-- Mobile Menu (Overlay) -->
-        <!-- Light Mode: bg-white. Dark Mode: bg-brand-gray -->
-        <div id="mobile-menu" class="hidden fixed inset-0 bg-white dark:bg-brand-gray z-40 p-6">
+        <div id="mobile-menu" class="hidden fixed inset-0 bg-light-card dark:bg-dark-bg z-40 p-6">
             <div class="flex justify-between items-center mb-12 container mx-auto">
-                <a href="#hero" class="text-xl font-bold text-gray-900 dark:text-white mobile-link">Hari L</a>
+                <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link">Hari L</a>
                 <button id="mobile-menu-close" aria-label="Close menu">
-                    <i data-lucide="x" class="text-gray-900 dark:text-white w-6 h-6"></i>
+                    <i data-lucide="x" class="text-light-text dark:text-dark-text w-6 h-6"></i>
                 </button>
             </div>
             <div class="flex flex-col space-y-8 text-center items-center h-full justify-center -mt-24">
-                <!-- Light Mode: text-gray-600 hover:text-gray-900. Dark Mode: text-brand-text-muted hover:text-white -->
-                <a href="#about" class="text-3xl text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors mobile-link">About</a>
-                <a href="#projects" class="text-3xl text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors mobile-link">Projects</a>
-                <a href="#skills" class="text-3xl text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors mobile-link">Skills</a>
-                <a href="#contact" class="text-3xl text-gray-600 hover:text-gray-900 dark:text-brand-text-muted dark:hover:text-white transition-colors mobile-link">Contact</a>
+                <a href="#about" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">About</a>
+                <a href="#projects" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Projects</a>
+                <a href="#skills" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Skills</a>
+                <a href="#contact" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Contact</a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-6 pt-24">
 
-        <!-- Section 1: Hero -->
-        <section id="hero" class="min-h-[70vh] flex items-center text-center md:text-left">
-            <div class="max-w-3xl reveal">
-                <h1 class="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-4">
+        <section id="hero" class="min-h-[70vh] flex items-center text-center md:text-left overflow-hidden">
+            <canvas id="hero-canvas" class="three-canvas"></canvas>
+            <div class="max-w-3xl reveal relative z-10">
+                <h1 class="text-5xl md:text-7xl font-bold text-light-text dark:text-dark-text mb-4">
                     Hari L
                 </h1>
-                <!-- Dynamic Typing Subtitle -->
-                <!-- Light Mode: text-blue-600. Dark Mode: text-brand-primary -->
-                <p class="text-2xl md:text-3xl text-blue-600 dark:text-brand-primary font-medium mb-8 min-h-[40px] md:min-h-[48px]">
+                <p class="text-2xl md:text-3xl text-light-primary dark:text-dark-primary font-medium mb-8 min-h-[40px] md:min-h-[48px]">
                     <span id="typed-subtitle"></span>
                 </p>
-                <!-- Light Mode: bg-blue-600 hover:bg-blue-700. Dark Mode: bg-brand-primary hover:bg-opacity-80 -->
-                <a href="#projects" class="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-brand-primary dark:hover:bg-opacity-80 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all transform hover:scale-105">
+                
+                <a href="#projects" class="inline-block bg-light-primary hover:bg-blue-700 dark:bg-dark-primary dark:hover:bg-opacity-80 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all transform hover:scale-105">
                     View My Work
                 </a>
             </div>
         </section>
 
-        <!-- Section 2: About Me -->
-        <section id="about" class="py-24 overflow-hidden"> <!-- Added overflow-hidden for animations -->
-            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-8 text-center reveal-left">About Me</h2>
-            <!-- Light Mode: bg-gray-50 border-gray-200. Dark Mode: bg-brand-light-gray border-[#444] -->
-            <div class="max-w-3xl mx-auto bg-gray-50 dark:bg-brand-light-gray p-8 rounded-lg shadow-xl border border-gray-200 dark:border-[#444] reveal-right">
-                <!-- Light Mode: text-gray-700. Dark Mode: text-brand-text-muted -->
-                <p class="text-lg text-gray-700 dark:text-brand-text-muted leading-relaxed">
+        <section id="about" class="py-24 overflow-hidden">
+            <canvas id="about-canvas" class="three-canvas"></canvas>
+            
+            <h2 class="text-4xl font-bold text-light-text dark:text-dark-text mb-8 text-center reveal-left relative z-10">About Me</h2>
+            
+            <div class="max-w-3xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-lg shadow-xl border border-light-border dark:border-dark-border reveal-right relative z-10">
+                <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed">
                     First-year Mechanical Engineering student passionate about CFD, robotics, and the application of AI in engineering.
                 </p>
                 <br>
-                <p class="text-lg text-gray-700 dark:text-brand-text-muted leading-relaxed">
+                <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed">
                     I thrive on learning new technologies quickly and leading teams to solve complex technical challenges.
                     Currently exploring generative design and AI-driven automation in engineering workflows.
                 </p>
             </div>
         </section>
 
-        <!-- Section 3: Projects -->
-        <section id="projects" class="py-24 overflow-hidden"> <!-- Added overflow-hidden for animations -->
-            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center reveal-left">Projects</h2>
+        <section id="projects" class="py-24 overflow-hidden">
+            <h2 class="text-4xl font-bold text-light-text dark:text-dark-text mb-12 text-center reveal-left">Projects</h2>
             
-            <!-- Project Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-right">
 
-                <!-- Project Card 1 -->
-                <!-- Light Mode: bg-gray-50 border-gray-200. Dark Mode: bg-brand-light-gray border-[#444] -->
-                <div class="project-card bg-gray-50 dark:bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-[#444] flex flex-col">
+                <div class="project-card flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">🏆 ASME IMECE BrainBolt 2025</h3>
-                        <p class="text-gray-700 dark:text-brand-text-muted mb-4">
+                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🏆 ASME IMECE BrainBolt 2025</h3>
+                        <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
                             Finalist in a 2-week CFD automation hackathon by Ansys/CADFEM. Led R&D for mixing tank optimization and vehicle aerodynamics using PyFluent, despite zero prior CFD experience.
                         </p>
-                        <!-- Tech Tags -->
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <!-- Light Mode: bg-gray-200 text-gray-700. Dark Mode: bg-gray-700 text-gray-300 -->
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyFluent</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyAnsys</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CFD</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Python</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Aerodynamics</span>
                         </div>
                     </div>
-                    <!-- Project Link -->
-                    <!-- Light Mode: bg-gray-100. Dark Mode: bg-gray-900/50 -->
                     <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" class="font-medium text-blue-600 dark:text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                            View Project 
+                        <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View on GitHub
                             <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- Project Card 2 -->
-                <div class="project-card bg-gray-50 dark:bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-[#444] flex flex-col">
+                <div class="project-card flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">🚣 Kayak Paddle Optimization</h3>
-                        <p class="text-gray-700 dark:text-brand-text-muted mb-4">
+                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🚣 Kayak Paddle Optimization</h3>
+                        <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
                             Smart India Hackathon 2025 selected project. Developing user-specific kayak paddle optimization using generative design, biomechanics, and additive manufacturing.
                         </p>
-                        <!-- Tech Tags -->
                         <div class="flex flex-wrap gap-2 mb-4">
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Fusion 360</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Generative Design</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CAD</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">3D Printing</span>
                         </div>
                     </div>
-                    <!-- Project Link -->
                     <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-blue-600 dark:text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                            View Project 
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View on GitHub
                             <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- Project Card 3 -->
-                <div class="project-card bg-gray-50 dark:bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-[#444] flex flex-col">
+                <div class="project-card flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">🤖 Smart Glass Cleaning Robot</h3>
-                        <p class="text-gray-700 dark:text-brand-text-muted mb-4">
+                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🤖 Smart Glass Cleaning Robot</h3>
+                        <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
                             Designed and prototyped a fully automated glass cleaning robot within 100cm³ size constraints. Focused on compact mechanical design and automation logic.
                         </p>
-                        <!-- Tech Tags -->
                         <div class="flex flex-wrap gap-2 mb-4">
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Robotics</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Automation</span>
                             <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Mechanical Design</span>
                         </div>
                     </div>
-                    <!-- Project Link -->
                     <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-blue-600 dark:text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                            View Project 
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                            View on GitHub
                             <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
                         </a>
                     </div>
                 </div>
-                
-                <!-- Project Card 4 (from IoT) -->
-                <div class="project-card bg-gray-50 dark:bg-brand-light-gray rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-[#444] flex flex-col">
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">⚙️ IoT & Embedded Projects</h3>
-                        <p class="text-gray-700 dark:text-brand-text-muted mb-4">
-                            Pre-college hobby projects exploring embedded systems and IoT applications using Arduino and ESP8266, building a foundation for automation and smart devices.
-                        </p>
-                        <!-- Tech Tags -->
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Arduino</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">ESP8266</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">IoT</span>
-                        </div>
-                    </div>
-                    <!-- Project Link -->
-                    <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-blue-600 dark:text-brand-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                            View Project 
-                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-
             </div>
         </section>
 
-        <!-- Section 4: Technical Skills -->
-        <section id="skills" class="py-24 overflow-hidden"> <!-- Added overflow-hidden for animations -->
-            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center reveal-left">Technical Skills</h2>
+        <section id="skills" class="py-24 overflow-hidden">
+            <h2 class="text-4xl font-bold text-light-text dark:text-dark-text mb-12 text-center reveal-left">Technical Skills</h2>
             
-            <!-- Skills Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal-right">
                 
-                <!-- Skill Card 1 -->
-                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
-                    <!-- Default Content -->
-                    <div class="default-content text-center">
-                        <i data-lucide="cpu" class="w-12 h-12 text-blue-600 dark:text-brand-primary mx-auto mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Simulation & Analysis</h3>
-                        <p class="text-sm text-gray-500 dark:text-brand-text-muted">(Hover to see details)</p>
+                <div class="skill-card">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="cpu" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Simulation & Analysis</h3>
                     </div>
-                    <!-- Hover Content -->
-                    <div class="details">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Simulation & Analysis</h3>
-                        <ul class="list-disc list-inside text-left text-gray-600 dark:text-brand-text-muted space-y-1">
-                            <li>CFD Analysis</li>
-                            <li>PyFluent</li>
-                            <li>PyAnsys</li>
-                            <li>ANSYS Fluent</li>
-                            <li>Aerodynamics</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Skill Card 2 -->
-                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
-                    <!-- Default Content -->
-                    <div class="default-content text-center">
-                        <i data-lucide="printer" class="w-12 h-12 text-blue-600 dark:text-brand-primary mx-auto mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Design & Manufacturing</h3>
-                        <p class="text-sm text-gray-500 dark:text-brand-text-muted">(Hover to see details)</p>
-                    </div>
-                    <!-- Hover Content -->
-                    <div class="details">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Design & Manufacturing</h3>
-                        <ul class="list-disc list-inside text-left text-gray-600 dark:text-brand-text-muted space-y-1">
-                            <li>Fusion 360</li>
-                            <li>Generative Design</li>
-                            <li>CAD Design</li>
-                            <li>3D Printing</li>
-                            <li>Mechanical Design</li>
-                        </ul>
-                    </div>
+                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
+                        <li>CFD Analysis</li>
+                        <li>PyFluent / PyAnsys</li>
+                        <li>ANSYS Fluent</li>
+                        <li>Aerodynamics</li>
+                    </ul>
                 </div>
 
-                <!-- Skill Card 3 -->
-                <div class="skill-card relative p-6 rounded-lg h-48 flex flex-col justify-center items-center text-center">
-                    <!-- Default Content -->
-                    <div class="default-content text-center">
-                        <i data-lucide="code" class="w-12 h-12 text-blue-600 dark:text-brand-primary mx-auto mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Automation & Robotics</h3>
-                        <p class="text-sm text-gray-500 dark:text-brand-text-muted">(Hover to see details)</p>
+                <div class="skill-card">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="printer" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Design & Manufacturing</h3>
                     </div>
-                    <!-- Hover Content -->
-                    <div class="details">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Automation & Robotics</h3>
-                        <ul class="list-disc list-inside text-left text-gray-600 dark:text-brand-text-muted space-y-1">
-                            <li>Python</li>
-                            <li>Automation Scripts</li>
-                            <li>Robotics</li>
-                            <li>Embedded Systems</li>
-                            <li>Arduino / ESP8266</li>
-                        </ul>
-                    </div>
+                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
+                        <li>Fusion 360</li>
+                        <li>Generative Design</li>
+                        <li>CAD Design</li>
+                        <li>3D Printing</li>
+                    </ul>
                 </div>
 
+                <div class="skill-card">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="code" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Automation & Robotics</h3>
+                    </div>
+                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
+                        <li>Python</li>
+                        <li>Automation Scripts</li>
+                        <li>Robotics</li>
+                        <li>Embedded Systems</li>
+                    </ul>
+                </div>
             </div>
         </section>
-        
-        <!-- Section 5: Contact -->
-        <!-- Add relative and overflow-hidden for 3D canvas -->
-        <section id="contact" class="py-24 text-center reveal relative overflow-hidden">
-            <!-- 3D Canvas Element -->
-            <canvas id="contact-canvas"></canvas>
+
+        <section id="contact" class="py-24 text-center reveal overflow-hidden">
+            <canvas id="contact-canvas" class="three-canvas"></canvas>
             
-            <!-- Content needs relative z-index to be on top -->
             <div class="relative z-10">
-                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">Get In Touch</h2>
-                <p class="text-lg text-gray-700 dark:text-brand-text-muted max-w-2xl mx-auto mb-10">
+                <h2 class="text-4xl font-bold text-light-text dark:text-dark-text mb-6">Get In Touch</h2>
+                <p class="text-lg text-light-text-muted dark:text-dark-text-muted max-w-2xl mx-auto mb-10">
                     I'm always interested in connecting with fellow engineering enthusiasts, mentors, and collaborators. Feel free to reach out!
                 </p>
                 
-                <!-- Social Links -->
                 <div class="flex justify-center space-x-4 md:space-x-8">
                     <a href="mailto:harilogesh2019@gmail.com" class="social-link" aria-label="Email">
-                        <!-- icon class handles light/dark color -->
-                        <i data-lucide="mail" class="icon text-gray-500 dark:text-brand-text-muted"></i>
+                        <i data-lucide="mail" class="icon"></i>
                     </a>
                     <a href="https://www.linkedin.com/in/haril2019" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="linkedin" class="icon text-gray-500 dark:text-brand-text-muted"></i>
+                        <i data-lucide="linkedin" class="icon"></i>
                     </a>
                     <a href="https://github.com/DEFAULTE-R" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="github" class="icon text-gray-500 dark:text-brand-text-muted"></i>
+                        <i data-lucide="github" class="icon"></i>
                     </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <!-- Light Mode: border-gray-200. Dark Mode: border-brand-light-gray -->
-    <footer class="border-t border-gray-200 dark:border-brand-light-gray mt-16">
-        <!-- Light Mode: text-gray-500. Dark Mode: text-brand-text-muted -->
-        <div class="container mx-auto px-6 py-8 text-center text-gray-500 dark:text-brand-text-muted">
+    <footer class="border-t border-light-border dark:border-dark-border mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500 dark:text-dark-text-muted">
             © 2025 Hari L. Built with passion and precision.
         </div>
     </footer>
 
-    <!-- Load Typed.js for typing animation -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
 
-    <!-- Initialize Lucide Icons & Custom JS -->
     <script>
-        // --- 3D Animation Variables ---
-        let contactScene, contactCamera, contactRenderer, cubeLines;
+        // --- Global Theme & 3D State ---
+        let currentTheme = 'light';
+        const threeScenes = {
+            hero: { canvas: null, scene: null, camera: null, renderer: null, particles: null, isVisible: false },
+            about: { canvas: null, scene: null, camera: null, renderer: null, mesh: null, isVisible: false },
+            contact: { canvas: null, scene: null, camera: null, renderer: null, mesh: null, isVisible: false }
+        };
 
-        document.addEventListener('DOMContentLoaded', (event) => {
+        // --- Helper: Get theme-based colors ---
+        const getThemeColors = () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                primary: isDark ? 0x00aaff : 0x2563eb,
+                particle: isDark ? 0x00aaff : 0x2563eb,
+                text: isDark ? 0xf0f0f0 : 0x111827
+            };
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
             // --- Initialize Lucide Icons ---
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             } else {
-                console.error('Lucide library not loaded. Check script src.');
+                console.error('Lucide library not loaded.');
             }
 
             // --- Theme Toggle Logic ---
@@ -598,6 +423,9 @@
             const moonIcons = [document.getElementById('theme-icon-moon'), document.getElementById('theme-icon-moon-mobile')];
 
             function setTheme(theme) {
+                currentTheme = theme;
+                const colors = getThemeColors();
+                
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
                     document.body.classList.add('dark');
@@ -611,19 +439,25 @@
                     sunIcons.forEach(icon => icon.classList.remove('hidden'));
                     moonIcons.forEach(icon => icon.classList.add('hidden'));
                 }
-                // Update cube color
-                if (cubeLines) {
-                    const newColor = theme === 'dark' ? 0x00aaff : 0x0077ff;
-                    cubeLines.material.color.setHex(newColor);
+
+                // Update 3D colors
+                if (threeScenes.hero.particles) {
+                    threeScenes.hero.particles.material.color.setHex(colors.particle);
+                }
+                if (threeScenes.about.mesh) {
+                    threeScenes.about.mesh.material.color.setHex(colors.primary);
+                }
+                if (threeScenes.contact.mesh) {
+                    threeScenes.contact.mesh.material.color.setHex(colors.primary);
                 }
             }
 
             function toggleTheme() {
-                const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+                const newTheme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
             }
 
-            // Set initial theme on load
+            // Set initial theme
             const savedTheme = localStorage.getItem('theme');
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             setTheme(savedTheme || systemTheme);
@@ -632,22 +466,18 @@
             if (themeToggleButton) themeToggleButton.addEventListener('click', toggleTheme);
             if (themeToggleButtonMobile) themeToggleButtonMobile.addEventListener('click', toggleTheme);
 
-
             // --- Mobile Menu Toggle ---
             const menuButton = document.getElementById('mobile-menu-button');
             const closeButton = document.getElementById('mobile-menu-close');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileLinks = document.querySelectorAll('.mobile-link');
 
-            function openMenu() {
-                if (mobileMenu) mobileMenu.classList.remove('hidden');
-            }
-            function closeMenu() {
-                if (mobileMenu) mobileMenu.classList.add('hidden');
-            }
+            function openMenu() { if (mobileMenu) mobileMenu.classList.remove('hidden'); }
+            // ⭐️ 11. FIXED: The mobile menu bug
+            function closeMenu() { if (mobileMenu) mobileMenu.classList.add('hidden'); }
 
             if (menuButton) menuButton.addEventListener('click', openMenu);
-            if (closeButton) closeButton.addEventListener('click', close.Menu);
+            if (closeButton) closeButton.addEventListener('click', closeMenu); // Bug fix!
             mobileLinks.forEach(link => {
                 link.addEventListener('click', closeMenu);
             });
@@ -657,7 +487,8 @@
                 new Typed('#typed-subtitle', {
                     strings: [
                         'Mechanical Engineering Student',
-                        'AI Enthusiast',
+                        'CFD & AI Enthusiast',
+                        'Robotics & Automation',
                         'Problem Solver'
                     ],
                     typeSpeed: 50,
@@ -670,146 +501,192 @@
                 console.error('Typed.js library not loaded.');
             }
 
-            // --- Custom Cursor Logic ---
-            const cursorDot = document.getElementById('cursor-dot');
-            const cursorOutline = document.getElementById('cursor-outline');
-            const interactiveElements = document.querySelectorAll('a, button');
-            
-            window.addEventListener('mousemove', (e) => {
-                if (cursorDot && cursorOutline) {
-                    cursorDot.style.left = e.clientX + 'px';
-                    cursorDot.style.top = e.clientY + 'px';
-                    
-                    cursorOutline.style.left = e.clientX + 'px';
-                    cursorOutline.style.top = e.clientY + 'px';
-                }
-            });
-
-            // Add hover effect to cursor
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseover', () => {
-                    if (cursorDot && cursorOutline) {
-                        cursorDot.classList.add('cursor-hover');
-                        cursorOutline.classList.add('cursor-hover');
-                    }
-                });
-                el.addEventListener('mouseout', () => {
-                    if (cursorDot && cursorOutline) {
-                        cursorDot.classList.remove('cursor-hover');
-                        cursorOutline.classList.remove('cursor-hover');
-                    }
-                });
-            });
-
-            // --- Hero Fade-on-Scroll ---
-            const heroSection = document.getElementById('hero');
-            if (heroSection) {
-                window.addEventListener('scroll', () => {
-                    const scrollPosition = window.scrollY;
-                    const heroHeight = heroSection.offsetHeight;
-                    // Start fading after scrolling a bit, and be fully faded by 50% of hero height
-                    const fadeStart = heroHeight * 0.1;
-                    const fadeEnd = heroHeight * 0.5;
-                    
-                    if (scrollPosition > fadeStart) {
-                        const opacity = 1 - (scrollPosition - fadeStart) / (fadeEnd - fadeStart);
-                        heroSection.style.opacity = Math.max(0, Math.min(1, opacity));
-                    } else {
-                        heroSection.style.opacity = 1;
-                    }
-                });
-            }
-
             // --- Reveal on Scroll Animation ---
             const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-            
-            const observer = new IntersectionObserver((entries) => {
+            const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        // We can unobserve it if we only want the animation once
-                        // observer.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.1 // Trigger when 10% of the element is in view
-            });
+            }, { threshold: 0.1 });
+            revealElements.forEach(el => revealObserver.observe(el));
 
-            revealElements.forEach(el => {
-                observer.observe(el);
-            });
-
-            // --- Contact Section 3D Animation ---
-            function initContactAnimation() {
-                const canvas = document.getElementById('contact-canvas');
-                const section = document.getElementById('contact');
-                if (!canvas || !section || typeof THREE === 'undefined') {
-                    console.error('Three.js or canvas element not found.');
-                    return; 
-                }
-
-                contactScene = new THREE.Scene();
-                
-                const width = section.clientWidth;
-                const height = section.clientHeight;
-
-                contactCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-                contactRenderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-                contactRenderer.setSize(width, height);
-                contactRenderer.setClearColor(0x000000, 0); // Transparent background
-
-                const geometry = new THREE.BoxGeometry(2, 2, 2);
-                
-                // Set initial color based on theme
-                const initialColor = document.documentElement.classList.contains('dark') ? 0x00aaff : 0x0077ff;
-
-                const material = new THREE.LineBasicMaterial({
-                    color: initialColor,
-                });
-                
-                const edges = new THREE.EdgesGeometry(geometry);
-                cubeLines = new THREE.LineSegments(edges, material);
-                contactScene.add(cubeLines);
-
-                contactCamera.position.z = 3.5;
-
-                animateContact();
-
-                // Handle window resize
-                window.addEventListener('resize', () => {
-                    // Check if section exists before accessing clientWidth/Height
-                    if(section) {
-                        const newWidth = section.clientWidth;
-                        const newHeight = section.clientHeight;
-                        
-                        if(contactCamera) {
-                            contactCamera.aspect = newWidth / newHeight;
-                            contactCamera.updateProjectionMatrix();
-                        }
-                        if(contactRenderer) {
-                            contactRenderer.setSize(newWidth, newHeight);
-                        }
-                    }
-                });
+            // --- Initialize All 3D Animations ---
+            if (typeof THREE !== 'undefined') {
+                initHeroAnimation();
+                initAboutAnimation();
+                initContactAnimation();
+                startAnimationLoop(); // Start the single animation loop
+                setupVisibilityObserver(); // Start observing sections for performance
+            } else {
+                console.error('Three.js library not loaded.');
             }
 
-            function animateContact() {
-                if (!cubeLines) return; // Stop if not initialized
-                requestAnimationFrame(animateContact);
-                
-                cubeLines.rotation.x += 0.002;
-                cubeLines.rotation.y += 0.003;
-                
-                if(contactRenderer && contactScene && contactCamera) {
-                    contactRenderer.render(contactScene, contactCamera);
-                }
-            }
-
-            // Initialize the 3D animation
-            initContactAnimation();
-
+            // Handle window resize for all 3D scenes
+            window.addEventListener('resize', onAllScenesResize);
         });
+        
+        // --- 3D Animation: Hero Particle Stream ---
+        function initHeroAnimation() {
+            const s = threeScenes.hero;
+            const section = document.getElementById('hero');
+            s.canvas = document.getElementById('hero-canvas');
+            if (!s.canvas || !section) return;
+
+            const bounds = section.getBoundingClientRect();
+            s.scene = new THREE.Scene();
+            s.camera = new THREE.PerspectiveCamera(75, bounds.width / bounds.height, 0.1, 1000);
+            s.renderer = new THREE.WebGLRenderer({ canvas: s.canvas, alpha: true });
+            s.renderer.setSize(bounds.width, bounds.height);
+            s.renderer.setClearColor(0x000000, 0);
+
+            const particleCount = 10000;
+            const positions = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3 + 0] = (Math.random() - 0.5) * 20; // x
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20; // y
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // z
+            }
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: getThemeColors().particle,
+                size: 0.02,
+                transparent: true,
+                opacity: 0.7
+            });
+            s.particles = new THREE.Points(geometry, material);
+            s.scene.add(s.particles);
+            s.camera.position.z = 5;
+        }
+
+        // --- 3D Animation: About Icosahedron ---
+        function initAboutAnimation() {
+            const s = threeScenes.about;
+            const section = document.getElementById('about');
+            s.canvas = document.getElementById('about-canvas');
+            if (!s.canvas || !section) return;
+            
+            const bounds = section.getBoundingClientRect();
+            s.scene = new THREE.Scene();
+            s.camera = new THREE.PerspectiveCamera(75, bounds.width / bounds.height, 0.1, 1000);
+            s.renderer = new THREE.WebGLRenderer({ canvas: s.canvas, alpha: true });
+            s.renderer.setSize(bounds.width, bounds.height);
+            s.renderer.setClearColor(0x000000, 0);
+
+            const geometry = new THREE.IcosahedronGeometry(2); // radius 2
+            const edges = new THREE.EdgesGeometry(geometry);
+            const material = new THREE.LineBasicMaterial({
+                color: getThemeColors().primary,
+            });
+            s.mesh = new THREE.LineSegments(edges, material);
+            s.scene.add(s.mesh);
+            s.camera.position.z = 5;
+        }
+
+        // --- 3D Animation: Contact Cube (Original) ---
+        function initContactAnimation() {
+            const s = threeScenes.contact;
+            const section = document.getElementById('contact');
+            s.canvas = document.getElementById('contact-canvas');
+            if (!s.canvas || !section) return;
+
+            const bounds = section.getBoundingClientRect();
+            s.scene = new THREE.Scene();
+            s.camera = new THREE.PerspectiveCamera(75, bounds.width / bounds.height, 0.1, 1000);
+            s.renderer = new THREE.WebGLRenderer({ canvas: s.canvas, alpha: true });
+            s.renderer.setSize(bounds.width, bounds.height);
+            s.renderer.setClearColor(0x000000, 0);
+
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const edges = new THREE.EdgesGeometry(geometry);
+            const material = new THREE.LineBasicMaterial({
+                color: getThemeColors().primary,
+            });
+            s.mesh = new THREE.LineSegments(edges, material);
+            s.scene.add(s.mesh);
+            s.camera.position.z = 3.5;
+        }
+
+        // --- Single Animation Loop ---
+        function startAnimationLoop() {
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Animate Hero Particles
+                const sHero = threeScenes.hero;
+                if (sHero.isVisible && sHero.particles) {
+                    sHero.particles.rotation.y += 0.0005;
+                    const positions = sHero.particles.geometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        positions[i + 1] -= 0.01; // Move particle down
+                        if (positions[i + 1] < -10) {
+                            positions[i + 1] = 10; // Reset to top
+                        }
+                    }
+                    sHero.particles.geometry.attributes.position.needsUpdate = true;
+                    sHero.renderer.render(sHero.scene, sHero.camera);
+                }
+
+                // Animate About Mesh
+                const sAbout = threeScenes.about;
+                if (sAbout.isVisible && sAbout.mesh) {
+                    sAbout.mesh.rotation.x += 0.002;
+                    sAbout.mesh.rotation.y += 0.003;
+                    sAbout.renderer.render(sAbout.scene, sAbout.camera);
+                }
+
+                // Animate Contact Mesh
+                const sContact = threeScenes.contact;
+                if (sContact.isVisible && sContact.mesh) {
+                    sContact.mesh.rotation.x += 0.002;
+                    sContact.mesh.rotation.y += 0.003;
+                    sContact.renderer.render(sContact.scene, sContact.camera);
+                }
+            }
+            animate();
+        }
+
+        // --- Performance: Observe section visibility ---
+        function setupVisibilityObserver() {
+            const sections = [
+                { id: 'hero', state: threeScenes.hero },
+                { id: 'about', state: threeScenes.about },
+                { id: 'contact', state: threeScenes.contact }
+            ];
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const- targetState = sections.find(s => s.id === entry.target.id)?.state;
+                    if (targetState) {
+                        targetState.isVisible = entry.isIntersecting;
+                    }
+                });
+            }, { threshold: 0.01 }); // Trigger even if 1% is visible
+
+            sections.forEach(s => {
+                const el = document.getElementById(s.id);
+                if (el) observer.observe(el);
+            });
+        }
+
+        // --- Performance: Handle window resize for ALL scenes ---
+        function onAllScenesResize() {
+            for (const key in threeScenes) {
+                const s = threeScenes[key];
+                if (s.canvas && s.camera && s.renderer) {
+                    const section = s.canvas.parentElement;
+                    if (section) {
+                        const bounds = section.getBoundingClientRect();
+                        s.camera.aspect = bounds.width / bounds.height;
+                        s.camera.updateProjectionMatrix();
+                        s.renderer.setSize(bounds.width, bounds.height);
+                    }
+                }
+            }
+        }
     </script>
 </body>
 </html>
-
