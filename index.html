@@ -20,14 +20,14 @@
                     },
                     colors: {
                         // Light Mode - Professional Blue Theme
-                        'light-bg': '#f0f4f8',
-                        'light-card': '#ffffff',
-                        'light-text': '#1e293b',
-                        'light-text-muted': '#475569',
-                        'light-primary': '#2563eb',
-                        'light-primary-light': '#3b82f6',
-                        'light-border': '#e2e8f0',
-                        'light-accent': '#0ea5e9',
+                        'light-bg': '#0f172a',
+                        'light-card': '#1e293b',
+                        'light-text': '#f1f5f9',
+                        'light-text-muted': '#94a3b8',
+                        'light-primary': '#38bdf8',
+                        'light-primary-light': '#7dd3fc',
+                        'light-border': '#334155',
+                        'light-accent': '#60a5fa',
 
                         // Dark Mode - Deep Blue Theme
                         'dark-bg': '#0f172a',
@@ -69,31 +69,9 @@
             color: theme('colors.dark-text');
         }
 
-        /* Theme transition overlay */
-        .theme-transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: theme('colors.light-bg');
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        body.dark .theme-transition-overlay {
-            background-color: theme('colors.dark-bg');
-        }
-
-        .theme-transition-active .theme-transition-overlay {
-            opacity: 1;
-        }
-
         /* Enhanced skill cards */
         .skill-card {
-            background: linear-gradient(145deg, theme('colors.light-card'), #f8fafc);
+            background: linear-gradient(145deg, theme('colors.light-card'), #1e293b);
             border: 1px solid theme('colors.light-border');
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding: 1.5rem;
@@ -109,7 +87,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
             transition: left 0.6s ease;
         }
 
@@ -124,7 +102,7 @@
 
         .skill-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
         }
 
         .dark .skill-card:hover {
@@ -133,10 +111,10 @@
 
         /* Enhanced project cards */
         .project-card {
-            background: linear-gradient(145deg, theme('colors.light-card'), #f8fafc);
+            background: linear-gradient(145deg, theme('colors.light-card'), #1e293b);
             border: 1px solid theme('colors.light-border');
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -166,7 +144,7 @@
 
         .project-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(56, 189, 248, 0.25);
         }
 
         .project-card:hover::after {
@@ -187,14 +165,14 @@
             width: 60px;
             height: 30px;
             border-radius: 15px;
-            background: linear-gradient(145deg, #cbd5e1, #e2e8f0);
+            background: linear-gradient(145deg, #475569, #334155);
             cursor: pointer;
             transition: all 0.4s ease;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .dark .theme-toggle {
-            background: linear-gradient(145deg, #475569, #334155);
+        .light .theme-toggle {
+            background: linear-gradient(145deg, #cbd5e1, #e2e8f0);
         }
 
         .theme-toggle::before {
@@ -205,12 +183,12 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: white;
+            background: #f8fafc;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .dark .theme-toggle::before {
+        .light .theme-toggle::before {
             transform: translateX(30px);
             background: #f8fafc;
         }
@@ -229,12 +207,12 @@
         .theme-toggle-icons i {
             width: 14px;
             height: 14px;
-            color: #475569;
+            color: #94a3b8;
             transition: color 0.3s ease;
         }
 
-        .dark .theme-toggle-icons i {
-            color: #94a3b8;
+        .light .theme-toggle-icons i {
+            color: #475569;
         }
 
         /* Enhanced social icons */
@@ -247,7 +225,7 @@
             height: 48px;
             border-radius: 50%;
             background: theme('colors.light-card');
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
 
@@ -296,7 +274,7 @@
 
         .social-link:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         .dark .social-link:hover {
@@ -415,19 +393,29 @@
 
         .primary-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
         }
 
         .dark .primary-button:hover {
             box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
         }
+
+        /* Background patterns */
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1) 0%, transparent 50%);
+        }
+
+        .light .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
     </style>
 </head>
 
-<body class="antialiased">
-    <!-- Theme transition overlay -->
-    <div class="theme-transition-overlay"></div>
-
+<body class="antialiased bg-pattern">
     <header class="fixed top-0 left-0 right-0 z-50 bg-light-card/80 dark:bg-dark-card/80 border-b border-light-border dark:border-dark-border">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link flex items-center">
@@ -768,7 +756,8 @@
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
 
     <script>
-        let currentTheme = 'light';
+        let currentTheme = 'dark'; // Default to dark theme
+
         const threeScenes = {
             hero: { canvas: null, scene: null, camera: null, renderer: null, particles: null, isVisible: false },
             about: { canvas: null, scene: null, camera: null, renderer: null, mesh: null, isVisible: false },
@@ -793,49 +782,43 @@
 
             const themeToggleButton = document.getElementById('theme-toggle-button');
             const themeToggleButtonMobile = document.getElementById('theme-toggle-button-mobile');
-            const themeTransitionOverlay = document.querySelector('.theme-transition-overlay');
 
             function setTheme(theme) {
-                document.body.classList.add('theme-transition-active');
+                currentTheme = theme;
                 
-                setTimeout(() => {
-                    currentTheme = theme;
-                    const colors = getThemeColors();
-                    
-                    if (theme === 'dark') {
-                        document.documentElement.classList.add('dark');
-                        document.body.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                        document.body.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    }
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                    document.body.classList.remove('light');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.body.classList.remove('dark');
+                    document.body.classList.add('light');
+                    localStorage.setItem('theme', 'light');
+                }
 
-                    if (threeScenes.hero.particles) {
-                        threeScenes.hero.particles.material.color.setHex(colors.particle);
-                    }
-                    if (threeScenes.about.mesh) {
-                        threeScenes.about.mesh.material.color.setHex(colors.primary);
-                    }
-                    if (threeScenes.contact.mesh) {
-                        threeScenes.contact.mesh.material.color.setHex(colors.primary);
-                    }
-                    
-                    setTimeout(() => {
-                        document.body.classList.remove('theme-transition-active');
-                    }, 300);
-                }, 10);
+                // Update 3D colors
+                const colors = getThemeColors();
+                if (threeScenes.hero.particles) {
+                    threeScenes.hero.particles.material.color.setHex(colors.particle);
+                }
+                if (threeScenes.about.mesh) {
+                    threeScenes.about.mesh.material.color.setHex(colors.primary);
+                }
+                if (threeScenes.contact.mesh) {
+                    threeScenes.contact.mesh.material.color.setHex(colors.primary);
+                }
             }
 
             function toggleTheme() {
-                const newTheme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 setTheme(newTheme);
             }
 
+            // Set initial theme - default to dark
             const savedTheme = localStorage.getItem('theme');
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            setTheme(savedTheme || systemTheme);
+            setTheme(savedTheme || 'dark');
 
             if (themeToggleButton) themeToggleButton.addEventListener('click', toggleTheme);
             if (themeToggleButtonMobile) themeToggleButtonMobile.addEventListener('click', toggleTheme);
@@ -1064,3 +1047,6 @@
     </script>
 </body>
 </html>
+
+
+
