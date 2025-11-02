@@ -7,12 +7,11 @@
     <title>Hari L - Engineering Portfolio</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        // ⭐️ 2. ENHANCED: Tailwind config with full Light/Dark mode palette
         tailwind.config = {
             theme: {
                 extend: {
@@ -20,101 +19,309 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        // Light Mode
-                        'light-bg': '#f8f9fa',       // Very light gray (was white)
-                        'light-card': '#ffffff',     // White
-                        'light-text': '#111827',     // Dark gray
-                        'light-text-muted': '#4b5563', // Medium gray
-                        'light-primary': '#2563eb',  // Blue-600
-                        'light-border': '#e5e7eb',   // Gray-200
+                        // Light Mode - Professional Blue Theme
+                        'light-bg': '#f0f4f8',
+                        'light-card': '#ffffff',
+                        'light-text': '#1e293b',
+                        'light-text-muted': '#475569',
+                        'light-primary': '#2563eb',
+                        'light-primary-light': '#3b82f6',
+                        'light-border': '#e2e8f0',
+                        'light-accent': '#0ea5e9',
 
-                        // Dark Mode
-                        'dark-bg': '#1a1a1a',          // brand-gray
-                        'dark-card': '#2b2b2b',        // brand-light-gray
-                        'dark-text': '#f0f0f0',        // brand-text
-                        'dark-text-muted': '#a0a0a0',   // brand-text-muted
-                        'dark-primary': '#00aaff',     // brand-primary
-                        'dark-border': '#444444',      // Dark border
+                        // Dark Mode - Deep Blue Theme
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                        'dark-text': '#f1f5f9',
+                        'dark-text-muted': '#94a3b8',
+                        'dark-primary': '#38bdf8',
+                        'dark-primary-light': '#7dd3fc',
+                        'dark-border': '#334155',
+                        'dark-accent': '#60a5fa',
                     }
                 },
             },
-            darkMode: 'class', // Enable class-based dark mode
+            darkMode: 'class',
         }
     </script>
     
     <style>
+        :root {
+            --transition-duration: 0.5s;
+        }
+
+        * {
+            transition: background-color var(--transition-duration) ease, 
+                        color var(--transition-duration) ease,
+                        border-color var(--transition-duration) ease,
+                        box-shadow var(--transition-duration) ease;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: theme('colors.light-bg');
             color: theme('colors.light-text');
-            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
         }
+
         body.dark {
             background-color: theme('colors.dark-bg');
             color: theme('colors.dark-text');
         }
-        .skill-card {
-            background-color: theme('colors.light-card');
-            border: 1px solid theme('colors.light-border');
-            transition: all 0.3s ease-in-out;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
+
+        /* Theme transition overlay */
+        .theme-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: theme('colors.light-bg');
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
+
+        body.dark .theme-transition-overlay {
+            background-color: theme('colors.dark-bg');
+        }
+
+        .theme-transition-active .theme-transition-overlay {
+            opacity: 1;
+        }
+
+        /* Enhanced skill cards */
+        .skill-card {
+            background: linear-gradient(145deg, theme('colors.light-card'), #f8fafc);
+            border: 1px solid theme('colors.light-border');
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
+        }
+
         .dark .skill-card {
-            background-color: theme('colors.dark-card');
+            background: linear-gradient(145deg, theme('colors.dark-card'), #1e293b);
             border: 1px solid theme('colors.dark-border');
         }
+
         .skill-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+
         .dark .skill-card:hover {
-            box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
         }
+
+        /* Enhanced project cards */
         .project-card {
-            background-color: theme('colors.light-card');
+            background: linear-gradient(145deg, theme('colors.light-card'), #f8fafc);
             border: 1px solid theme('colors.light-border');
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
         }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
         .dark .project-card {
-            background-color: theme('colors.dark-card');
+            background: linear-gradient(145deg, theme('colors.dark-card'), #1e293b);
             border: 1px solid theme('colors.dark-border');
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
+
+        .dark .project-card::after {
+            background: linear-gradient(90deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+        }
+
         .project-card:hover {
-            box-shadow: 0 0 20px 5px rgba(37, 99, 235, 0.15);
-            transform: translateY(-4px) scale(1.03);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
         }
+
+        .project-card:hover::after {
+            transform: scaleX(1);
+        }
+
         .dark .project-card:hover {
-            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(56, 189, 248, 0.25);
         }
+        
         .project-card:active {
-            transform: translateY(0px) scale(0.98);
+            transform: translateY(-4px) scale(1.01);
         }
-        .social-link .icon {
-            width: 32px;
-            height: 32px;
-            color: theme('colors.light-text-muted');
+
+        /* Enhanced theme toggle */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #cbd5e1, #e2e8f0);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .theme-toggle {
+            background: linear-gradient(145deg, #475569, #334155);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .dark .theme-toggle::before {
+            transform: translateX(30px);
+            background: #f8fafc;
+        }
+
+        .theme-toggle-icons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 8px;
+            pointer-events: none;
+        }
+
+        .theme-toggle-icons i {
+            width: 14px;
+            height: 14px;
+            color: #475569;
+            transition: color 0.3s ease;
+        }
+
+        .dark .theme-toggle-icons i {
+            color: #94a3b8;
+        }
+
+        /* Enhanced social icons */
+        .social-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: theme('colors.light-card');
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
+
+        .dark .social-link {
+            background: theme('colors.dark-card');
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-link .icon {
+            width: 24px;
+            height: 24px;
+            color: theme('colors.light-text-muted');
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
         .dark .social-link .icon {
             color: theme('colors.dark-text-muted');
         }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dark .social-link::before {
+            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+        }
+
         .social-link:hover .icon {
-            color: theme('colors.light-primary');
-            transform: scale(1.2);
+            color: white;
+            transform: scale(1.1);
         }
-        .dark .social-link:hover .icon {
-            color: theme('colors.dark-primary');
+
+        .social-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
+
+        .dark .social-link:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: theme('colors.light-border'); }
-        .dark ::-webkit-scrollbar-track { background: theme('colors.dark-card'); }
-        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #555; }
-        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #777; }
+        .dark ::-webkit-scrollbar-track { background: theme('colors.dark-border'); }
+        ::-webkit-scrollbar-thumb { 
+            background: theme('colors.light-primary');
+            border-radius: 4px; 
+        }
+        .dark ::-webkit-scrollbar-thumb { 
+            background: theme('colors.dark-primary');
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: theme('colors.light-primary-light'); 
+        }
+        .dark ::-webkit-scrollbar-thumb:hover { 
+            background: theme('colors.dark-primary-light'); 
+        }
+
+        /* Reveal on scroll animation */
         .reveal, .reveal-left, .reveal-right {
             opacity: 0;
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -126,6 +333,8 @@
             opacity: 1;
             transform: translate(0, 0);
         }
+
+        /* 3D Canvas Styles */
         .three-canvas {
             position: absolute;
             top: 0;
@@ -134,72 +343,169 @@
             height: 100%;
             z-index: 0;
         }
+
+        /* Ensure section content is on top */
         section {
             position: relative;
+        }
+
+        /* Enhanced header */
+        header {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark .gradient-text {
+            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Tech tag styling */
+        .tech-tag {
+            background: theme('colors.light-primary');
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .dark .tech-tag {
+            background: theme('colors.dark-primary');
+        }
+
+        .tech-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button enhancements */
+        .primary-button {
+            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .primary-button:hover::before {
+            left: 100%;
+        }
+
+        .dark .primary-button {
+            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .dark .primary-button:hover {
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
         }
     </style>
 </head>
 
-<body class="antialiased"> 
+<body class="antialiased">
+    <!-- Theme transition overlay -->
+    <div class="theme-transition-overlay"></div>
 
-    <header class="fixed top-0 left-0 right-0 z-50 bg-light-card/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-light-border dark:border-dark-border">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-light-card/80 dark:bg-dark-card/80 border-b border-light-border dark:border-dark-border">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link">Hari L</a>
+            <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link flex items-center">
+                <span class="gradient-text font-bold">Hari L</span>
+            </a>
             
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#about" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">About</a>
-                <a href="#projects" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Projects</a>
-                <a href="#skills" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Skills</a>
-                <a href="#contact" class="text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors">Contact</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors font-medium">About</a>
+                <a href="#projects" class="text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors font-medium">Projects</a>
+                <a href="#skills" class="text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors font-medium">Skills</a>
+                <a href="#contact" class="text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors font-medium">Contact</a>
                 
-                <button id="theme-toggle-button" class="text-light-text-muted dark:text-dark-text-muted hover:text-light-text dark:hover:text-dark-text" aria-label="Toggle theme">
-                    <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5"></i>
-                    <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5 hidden"></i>
-                </button>
+                <div class="flex items-center space-x-4 pl-4 border-l border-light-border dark:border-dark-border">
+                    <div id="theme-toggle-button" class="theme-toggle" aria-label="Toggle theme">
+                        <div class="theme-toggle-icons">
+                            <i data-lucide="sun" class="w-4 h-4"></i>
+                            <i data-lucide="moon" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="md:hidden flex items-center space-x-4">
-                <button id="theme-toggle-button-mobile" class="text-light-text dark:text-dark-text" aria-label="Toggle theme">
-                    <i id="theme-icon-sun-mobile" data-lucide="sun" class="w-6 h-6"></i>
-                    <i id="theme-icon-moon-mobile" data-lucide="moon" class="w-6 h-6 hidden"></i>
-                </button>
-                <button id="mobile-menu-button" aria-label="Open menu">
-                    <i data-lucide="menu" class="text-light-text dark:text-dark-text w-6 h-6"></i>
+                <div id="theme-toggle-button-mobile" class="theme-toggle mr-2" aria-label="Toggle theme">
+                    <div class="theme-toggle-icons">
+                        <i data-lucide="sun" class="w-4 h-4"></i>
+                        <i data-lucide="moon" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" aria-label="Open menu" class="p-2 rounded-lg bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border">
+                    <i data-lucide="menu" class="text-light-text dark:text-dark-text w-5 h-5"></i>
                 </button>
             </div>
         </nav>
         
-        <div id="mobile-menu" class="hidden fixed inset-0 bg-light-card dark:bg-dark-bg z-40 p-6">
+        <div id="mobile-menu" class="hidden fixed inset-0 bg-light-card dark:bg-dark-card z-40 p-6">
             <div class="flex justify-between items-center mb-12 container mx-auto">
-                <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link">Hari L</a>
-                <button id="mobile-menu-close" aria-label="Close menu">
-                    <i data-lucide="x" class="text-light-text dark:text-dark-text w-6 h-6"></i>
+                <a href="#hero" class="text-xl font-bold text-light-text dark:text-dark-text mobile-link">
+                    <span class="gradient-text font-bold">Hari L</span>
+                </a>
+                <button id="mobile-menu-close" aria-label="Close menu" class="p-2 rounded-lg bg-light-bg dark:bg-dark-bg">
+                    <i data-lucide="x" class="text-light-text dark:text-dark-text w-5 h-5"></i>
                 </button>
             </div>
             <div class="flex flex-col space-y-8 text-center items-center h-full justify-center -mt-24">
-                <a href="#about" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">About</a>
-                <a href="#projects" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Projects</a>
-                <a href="#skills" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Skills</a>
-                <a href="#contact" class="text-3xl text-light-text-muted hover:text-light-text dark:text-dark-text-muted dark:hover:text-dark-text transition-colors mobile-link">Contact</a>
+                <a href="#about" class="text-3xl text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors mobile-link font-medium">About</a>
+                <a href="#projects" class="text-3xl text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors mobile-link font-medium">Projects</a>
+                <a href="#skills" class="text-3xl text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors mobile-link font-medium">Skills</a>
+                <a href="#contact" class="text-3xl text-light-text-muted hover:text-light-primary dark:text-dark-text-muted dark:hover:text-dark-primary transition-colors mobile-link font-medium">Contact</a>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-6 pt-24">
 
-        <section id="hero" class="min-h-[70vh] flex items-center text-center md:text-left overflow-hidden">
+        <section id="hero" class="min-h-screen flex items-center text-center md:text-left overflow-hidden relative">
             <canvas id="hero-canvas" class="three-canvas"></canvas>
             <div class="max-w-3xl reveal relative z-10">
                 <h1 class="text-5xl md:text-7xl font-bold text-light-text dark:text-dark-text mb-4">
                     Hari L
                 </h1>
-                <p class="text-2xl md:text-3xl text-light-primary dark:text-dark-primary font-medium mb-8 min-h-[40px] md:min-h-[48px]">
+                <p class="text-2xl md:text-3xl gradient-text font-medium mb-8 min-h-[40px] md:min-h-[48px]">
                     <span id="typed-subtitle"></span>
                 </p>
+                <p class="text-lg text-light-text-muted dark:text-dark-text-muted mb-10 max-w-2xl">
+                    First-year Mechanical Engineering student specializing in CFD, robotics, and AI applications. Passionate about solving complex engineering challenges through innovation.
+                </p>
                 
-                <a href="#projects" class="inline-block bg-light-primary hover:bg-blue-700 dark:bg-dark-primary dark:hover:bg-opacity-80 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all transform hover:scale-105">
-                    View My Work
-                </a>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#projects" class="primary-button text-white font-semibold px-8 py-3 rounded-lg shadow-lg inline-flex items-center justify-center">
+                        View My Work
+                        <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                    </a>
+                    <a href="#contact" class="border border-light-primary text-light-primary dark:border-dark-primary dark:text-dark-primary font-semibold px-8 py-3 rounded-lg transition-all hover:bg-light-primary hover:text-white dark:hover:bg-dark-primary dark:hover:text-dark-bg inline-flex items-center justify-center">
+                        Get In Touch
+                        <i data-lucide="mail" class="ml-2 w-5 h-5"></i>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -208,15 +514,39 @@
             
             <h2 class="text-4xl font-bold text-light-text dark:text-dark-text mb-8 text-center reveal-left relative z-10">About Me</h2>
             
-            <div class="max-w-3xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-lg shadow-xl border border-light-border dark:border-dark-border reveal-right relative z-10">
-                <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed">
-                    First-year Mechanical Engineering student passionate about CFD, robotics, and the application of AI in engineering.
-                </p>
-                <br>
-                <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed">
-                    I thrive on learning new technologies quickly and leading teams to solve complex technical challenges.
-                    Currently exploring generative design and AI-driven automation in engineering workflows.
-                </p>
+            <div class="max-w-4xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-2xl shadow-xl border border-light-border dark:border-dark-border reveal-right relative z-10">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed mb-6">
+                            First-year Mechanical Engineering student passionate about Computational Fluid Dynamics (CFD), robotics, and the application of AI in engineering systems.
+                        </p>
+                        <p class="text-lg text-light-text-muted dark:text-dark-text-muted leading-relaxed">
+                            I thrive on learning new technologies quickly and leading teams to solve complex technical challenges. Currently exploring generative design and AI-driven automation in engineering workflows to push the boundaries of innovation.
+                        </p>
+                    </div>
+                    <div class="flex-1 grid grid-cols-2 gap-4">
+                        <div class="bg-light-bg dark:bg-dark-bg p-4 rounded-xl border border-light-border dark:border-dark-border text-center">
+                            <i data-lucide="target" class="w-8 h-8 text-light-primary dark:text-dark-primary mx-auto mb-2"></i>
+                            <h3 class="font-semibold text-light-text dark:text-dark-text">CFD Focus</h3>
+                            <p class="text-sm text-light-text-muted dark:text-dark-text-muted">Specializing in fluid dynamics</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg p-4 rounded-xl border border-light-border dark:border-dark-border text-center">
+                            <i data-lucide="brain" class="w-8 h-8 text-light-primary dark:text-dark-primary mx-auto mb-2"></i>
+                            <h3 class="font-semibold text-light-text dark:text-dark-text">AI Integration</h3>
+                            <p class="text-sm text-light-text-muted dark:text-dark-text-muted">Engineering + AI solutions</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg p-4 rounded-xl border border-light-border dark:border-dark-border text-center">
+                            <i data-lucide="git-branch" class="w-8 h-8 text-light-primary dark:text-dark-primary mx-auto mb-2"></i>
+                            <h3 class="font-semibold text-light-text dark:text-dark-text">Rapid Learning</h3>
+                            <p class="text-sm text-light-text-muted dark:text-dark-text-muted">Quick tech adaptation</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg p-4 rounded-xl border border-light-border dark:border-dark-border text-center">
+                            <i data-lucide="users" class="w-8 h-8 text-light-primary dark:text-dark-primary mx-auto mb-2"></i>
+                            <h3 class="font-semibold text-light-text dark:text-dark-text">Team Leadership</h3>
+                            <p class="text-sm text-light-text-muted dark:text-dark-text-muted">Project coordination</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -225,63 +555,80 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-right">
 
-                <div class="project-card flex flex-col">
+                <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🏆 ASME IMECE BrainBolt 2025</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
+                                <span class="text-xl">🏆</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">ASME IMECE BrainBolt 2025</h3>
+                        </div>
                         <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
-                            Finalist in a 2-week CFD automation hackathon by Ansys/CADFEM. Led R&D for mixing tank optimization and vehicle aerodynamics using PyFluent, despite zero prior CFD experience.
+                            Finalist in a 2-week CFD automation hackathon by Ansys/CADFEM. Led R&D for mixing tank optimization and vehicle aerodynamics using PyFluent.
                         </p>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyFluent</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">PyAnsys</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CFD</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">PyFluent</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">PyAnsys</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">CFD</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Python</span>
                         </div>
                     </div>
-                    <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                    <div class="p-6 bg-light-bg dark:bg-dark-bg border-t border-light-border dark:border-dark-border">
+                        <a href="https://github.com/DEFAULTE-R/ASME-IMECE-2025" class="font-medium text-light-primary dark:text-dark-primary hover:underline inline-flex items-center" target="_blank" rel="noopener noreferrer">
                             View on GitHub
-                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                            <i data-lucide="arrow-up-right" class="ml-1 w-4 h-4"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="project-card flex flex-col">
+                <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🚣 Kayak Paddle Optimization</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4">
+                                <span class="text-xl">🚣</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Kayak Paddle Optimization</h3>
+                        </div>
                         <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
-                            Smart India Hackathon 2025 selected project. Developing user-specific kayak paddle optimization using generative design, biomechanics, and additive manufacturing.
+                            Smart India Hackathon 2025 selected project. Developing user-specific kayak paddle optimization using generative design and biomechanics.
                         </p>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Fusion 360</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Generative Design</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">CAD</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Fusion 360</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Generative Design</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">CAD</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">3D Printing</span>
                         </div>
                     </div>
-                    <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                    <div class="p-6 bg-light-bg dark:bg-dark-bg border-t border-light-border dark:border-dark-border">
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline inline-flex items-center" target="_blank" rel="noopener noreferrer">
                             View on GitHub
-                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                            <i data-lucide="arrow-up-right" class="ml-1 w-4 h-4"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="project-card flex flex-col">
+                <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
-                        <h3 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">🤖 Smart Glass Cleaning Robot</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                                <span class="text-xl">🤖</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Glass Cleaning Robot</h3>
+                        </div>
                         <p class="text-light-text-muted dark:text-dark-text-muted mb-4">
-                            Designed and prototyped a fully automated glass cleaning robot within 100cm³ size constraints. Focused on compact mechanical design and automation logic.
+                            Designed and prototyped a fully automated glass cleaning robot within 100cm³ size constraints. Focused on compact mechanical design.
                         </p>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Robotics</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Automation</span>
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">Mechanical Design</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Robotics</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Automation</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Mechanical Design</span>
+                            <span class="tech-tag text-xs font-medium px-3 py-1 rounded-full">Embedded Systems</span>
                         </div>
                     </div>
-                    <div class="p-6 bg-gray-100 dark:bg-gray-900/50">
-                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                    <div class="p-6 bg-light-bg dark:bg-dark-bg border-t border-light-border dark:border-dark-border">
+                        <a href="https://github.com/DEFAULTE-R" class="font-medium text-light-primary dark:text-dark-primary hover:underline inline-flex items-center" target="_blank" rel="noopener noreferrer">
                             View on GitHub
-                            <i data-lucide="arrow-right" class="inline-block w-4 h-4 ml-1"></i>
+                            <i data-lucide="arrow-up-right" class="ml-1 w-4 h-4"></i>
                         </a>
                     </div>
                 </div>
@@ -295,40 +642,82 @@
                 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <i data-lucide="cpu" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
+                            <i data-lucide="cpu" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
+                        </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Simulation & Analysis</h3>
                     </div>
-                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
-                        <li>CFD Analysis</li>
-                        <li>PyFluent / PyAnsys</li>
-                        <li>ANSYS Fluent</li>
-                        <li>Aerodynamics</li>
+                    <ul class="list-none text-left text-light-text-muted dark:text-dark-text-muted space-y-2">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            CFD Analysis
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            PyFluent / PyAnsys
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            ANSYS Fluent
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Aerodynamics
+                        </li>
                     </ul>
                 </div>
 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <i data-lucide="printer" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <div class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4">
+                            <i data-lucide="printer" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
+                        </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Design & Manufacturing</h3>
                     </div>
-                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
-                        <li>Fusion 360</li>
-                        <li>Generative Design</li>
-                        <li>CAD Design</li>
-                        <li>3D Printing</li>
+                    <ul class="list-none text-left text-light-text-muted dark:text-dark-text-muted space-y-2">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Fusion 360
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Generative Design
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            CAD Design
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            3D Printing
+                        </li>
                     </ul>
                 </div>
 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <i data-lucide="code" class="w-10 h-10 text-light-primary dark:text-dark-primary mr-4 shrink-0"></i>
+                        <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                            <i data-lucide="code" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
+                        </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Automation & Robotics</h3>
                     </div>
-                    <ul class="list-disc list-inside text-left text-light-text-muted dark:text-dark-text-muted space-y-1">
-                        <li>Python</li>
-                        <li>Automation Scripts</li>
-                        <li>Robotics</li>
-                        <li>Embedded Systems</li>
+                    <ul class="list-none text-left text-light-text-muted dark:text-dark-text-muted space-y-2">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Python
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Automation Scripts
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Robotics
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-4 h-4 text-light-primary dark:text-dark-primary mr-2"></i>
+                            Embedded Systems
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -343,7 +732,7 @@
                     I'm always interested in connecting with fellow engineering enthusiasts, mentors, and collaborators. Feel free to reach out!
                 </p>
                 
-                <div class="flex justify-center space-x-4 md:space-x-8">
+                <div class="flex justify-center space-x-6 mb-12">
                     <a href="mailto:harilogesh2019@gmail.com" class="social-link" aria-label="Email">
                         <i data-lucide="mail" class="icon"></i>
                     </a>
@@ -354,20 +743,31 @@
                         <i data-lucide="github" class="icon"></i>
                     </a>
                 </div>
+                
+                <div class="bg-light-card dark:bg-dark-card p-8 rounded-2xl border border-light-border dark:border-dark-border max-w-md mx-auto">
+                    <h3 class="text-xl font-semibold text-light-text dark:text-dark-text mb-4">Let's work together</h3>
+                    <p class="text-light-text-muted dark:text-dark-text-muted mb-6">
+                        Interested in CFD, robotics, or AI projects? I'm open to collaborations and new opportunities.
+                    </p>
+                    <a href="mailto:harilogesh2019@gmail.com" class="primary-button text-white font-semibold px-6 py-3 rounded-lg inline-flex items-center justify-center w-full">
+                        <i data-lucide="send" class="mr-2 w-4 h-4"></i>
+                        Send Message
+                    </a>
+                </div>
             </div>
         </section>
     </main>
 
     <footer class="border-t border-light-border dark:border-dark-border mt-16">
         <div class="container mx-auto px-6 py-8 text-center text-gray-500 dark:text-dark-text-muted">
-            © 2025 Hari L. Built with passion and precision.
+            <p>© 2025 Hari L. Built with passion and precision.</p>
+            <p class="text-sm mt-2">Mechanical Engineering | CFD | Robotics | AI</p>
         </div>
     </footer>
 
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
 
     <script>
-        // --- Global Theme & 3D State ---
         let currentTheme = 'light';
         const threeScenes = {
             hero: { canvas: null, scene: null, camera: null, renderer: null, particles: null, isVisible: false },
@@ -375,58 +775,57 @@
             contact: { canvas: null, scene: null, camera: null, renderer: null, mesh: null, isVisible: false }
         };
 
-        // --- Helper: Get theme-based colors ---
         const getThemeColors = () => {
             const isDark = document.documentElement.classList.contains('dark');
             return {
-                primary: isDark ? 0x00aaff : 0x2563eb,
-                particle: isDark ? 0x00aaff : 0x2563eb,
-                text: isDark ? 0xf0f0f0 : 0x111827
+                primary: isDark ? 0x38bdf8 : 0x2563eb,
+                particle: isDark ? 0x38bdf8 : 0x2563eb,
+                text: isDark ? 0xf1f5f9 : 0x1e293b
             };
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Initialize Lucide Icons ---
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             } else {
                 console.error('Lucide library not loaded.');
             }
 
-            // --- Theme Toggle Logic ---
             const themeToggleButton = document.getElementById('theme-toggle-button');
             const themeToggleButtonMobile = document.getElementById('theme-toggle-button-mobile');
-            const sunIcons = [document.getElementById('theme-icon-sun'), document.getElementById('theme-icon-sun-mobile')];
-            const moonIcons = [document.getElementById('theme-icon-moon'), document.getElementById('theme-icon-moon-mobile')];
+            const themeTransitionOverlay = document.querySelector('.theme-transition-overlay');
 
             function setTheme(theme) {
-                currentTheme = theme;
-                const colors = getThemeColors();
+                document.body.classList.add('theme-transition-active');
                 
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    document.body.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                    sunIcons.forEach(icon => icon.classList.add('hidden'));
-                    moonIcons.forEach(icon => icon.classList.remove('hidden'));
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    document.body.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                    sunIcons.forEach(icon => icon.classList.remove('hidden'));
-                    moonIcons.forEach(icon => icon.classList.add('hidden'));
-                }
+                setTimeout(() => {
+                    currentTheme = theme;
+                    const colors = getThemeColors();
+                    
+                    if (theme === 'dark') {
+                        document.documentElement.classList.add('dark');
+                        document.body.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        document.body.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    }
 
-                // Update 3D colors
-                if (threeScenes.hero.particles) {
-                    threeScenes.hero.particles.material.color.setHex(colors.particle);
-                }
-                if (threeScenes.about.mesh) {
-                    threeScenes.about.mesh.material.color.setHex(colors.primary);
-                }
-                if (threeScenes.contact.mesh) {
-                    threeScenes.contact.mesh.material.color.setHex(colors.primary);
-                }
+                    if (threeScenes.hero.particles) {
+                        threeScenes.hero.particles.material.color.setHex(colors.particle);
+                    }
+                    if (threeScenes.about.mesh) {
+                        threeScenes.about.mesh.material.color.setHex(colors.primary);
+                    }
+                    if (threeScenes.contact.mesh) {
+                        threeScenes.contact.mesh.material.color.setHex(colors.primary);
+                    }
+                    
+                    setTimeout(() => {
+                        document.body.classList.remove('theme-transition-active');
+                    }, 300);
+                }, 10);
             }
 
             function toggleTheme() {
@@ -434,7 +833,6 @@
                 setTheme(newTheme);
             }
 
-            // Set initial theme
             const savedTheme = localStorage.getItem('theme');
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             setTheme(savedTheme || systemTheme);
@@ -442,7 +840,6 @@
             if (themeToggleButton) themeToggleButton.addEventListener('click', toggleTheme);
             if (themeToggleButtonMobile) themeToggleButtonMobile.addEventListener('click', toggleTheme);
 
-            // --- Mobile Menu Toggle ---
             const menuButton = document.getElementById('mobile-menu-button');
             const closeButton = document.getElementById('mobile-menu-close');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -457,7 +854,6 @@
                 link.addEventListener('click', closeMenu);
             });
 
-            // --- Initialize Typing Animation ---
             if (typeof Typed !== 'undefined') {
                 new Typed('#typed-subtitle', {
                     strings: [
@@ -476,7 +872,6 @@
                 console.error('Typed.js library not loaded.');
             }
 
-            // --- Reveal on Scroll Animation ---
             const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -487,7 +882,6 @@
             }, { threshold: 0.1 });
             revealElements.forEach(el => revealObserver.observe(el));
 
-            // --- Initialize All 3D Animations ---
             if (typeof THREE !== 'undefined') {
                 initHeroAnimation();
                 initAboutAnimation();
@@ -501,7 +895,6 @@
             window.addEventListener('resize', onAllScenesResize);
         });
         
-        // --- 3D Animation: Hero Particle Stream ---
         function initHeroAnimation() {
             const s = threeScenes.hero;
             const section = document.getElementById('hero');
@@ -515,28 +908,38 @@
             s.renderer.setSize(bounds.width, bounds.height);
             s.renderer.setClearColor(0x000000, 0);
 
-            const particleCount = 10000;
+            const particleCount = 15000;
             const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            const color = new THREE.Color(getThemeColors().particle);
+            
             for (let i = 0; i < particleCount; i++) {
-                positions[i * 3 + 0] = (Math.random() - 0.5) * 20; // x
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 20; // y
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // z
+                positions[i * 3 + 0] = (Math.random() - 0.5) * 40;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+                
+                colors[i * 3 + 0] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
             }
+            
             const geometry = new THREE.BufferGeometry();
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
             
             const material = new THREE.PointsMaterial({
-                color: getThemeColors().particle,
-                size: 0.02,
+                size: 0.05,
+                vertexColors: true,
                 transparent: true,
-                opacity: 0.7
+                opacity: 0.8
             });
+            
             s.particles = new THREE.Points(geometry, material);
             s.scene.add(s.particles);
-            s.camera.position.z = 5;
+            s.camera.position.z = 25;
         }
 
-        // --- 3D Animation: About Icosahedron ---
         function initAboutAnimation() {
             const s = threeScenes.about;
             const section = document.getElementById('about');
@@ -550,17 +953,17 @@
             s.renderer.setSize(bounds.width, bounds.height);
             s.renderer.setClearColor(0x000000, 0);
 
-            const geometry = new THREE.IcosahedronGeometry(2);
+            const geometry = new THREE.IcosahedronGeometry(3, 1);
             const edges = new THREE.EdgesGeometry(geometry);
             const material = new THREE.LineBasicMaterial({
                 color: getThemeColors().primary,
+                linewidth: 2
             });
             s.mesh = new THREE.LineSegments(edges, material);
             s.scene.add(s.mesh);
-            s.camera.position.z = 5;
+            s.camera.position.z = 8;
         }
 
-        // --- 3D Animation: Contact Cube (Original) ---
         function initContactAnimation() {
             const s = threeScenes.contact;
             const section = document.getElementById('contact');
@@ -574,56 +977,54 @@
             s.renderer.setSize(bounds.width, bounds.height);
             s.renderer.setClearColor(0x000000, 0);
 
-            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const geometry = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
             const edges = new THREE.EdgesGeometry(geometry);
             const material = new THREE.LineBasicMaterial({
                 color: getThemeColors().primary,
             });
             s.mesh = new THREE.LineSegments(edges, material);
             s.scene.add(s.mesh);
-            s.camera.position.z = 3.5;
+            s.camera.position.z = 8;
         }
 
-        // --- Single Animation Loop ---
         function startAnimationLoop() {
             function animate() {
                 requestAnimationFrame(animate);
 
-                // Animate Hero Particles
                 const sHero = threeScenes.hero;
                 if (sHero.isVisible && sHero.particles) {
-                    sHero.particles.rotation.y += 0.0005;
+                    sHero.particles.rotation.y += 0.001;
+                    sHero.particles.rotation.x += 0.0005;
+                    
                     const positions = sHero.particles.geometry.attributes.position.array;
                     for (let i = 0; i < positions.length; i += 3) {
-                        positions[i + 1] -= 0.01;
-                        if (positions[i + 1] < -10) {
-                            positions[i + 1] = 10;
+                        positions[i + 1] -= 0.03;
+                        if (positions[i + 1] < -20) {
+                            positions[i + 1] = 20;
                         }
                     }
                     sHero.particles.geometry.attributes.position.needsUpdate = true;
                     sHero.renderer.render(sHero.scene, sHero.camera);
                 }
 
-                // Animate About Mesh
                 const sAbout = threeScenes.about;
                 if (sAbout.isVisible && sAbout.mesh) {
-                    sAbout.mesh.rotation.x += 0.002;
-                    sAbout.mesh.rotation.y += 0.003;
+                    sAbout.mesh.rotation.x += 0.005;
+                    sAbout.mesh.rotation.y += 0.008;
                     sAbout.renderer.render(sAbout.scene, sAbout.camera);
                 }
 
-                // Animate Contact Mesh
                 const sContact = threeScenes.contact;
                 if (sContact.isVisible && sContact.mesh) {
-                    sContact.mesh.rotation.x += 0.002;
-                    sContact.mesh.rotation.y += 0.003;
+                    sContact.mesh.rotation.x += 0.006;
+                    sContact.mesh.rotation.y += 0.004;
+                    sContact.mesh.rotation.z += 0.002;
                     sContact.renderer.render(sContact.scene, sContact.camera);
                 }
             }
             animate();
         }
 
-        // --- Performance: Observe section visibility ---
         function setupVisibilityObserver() {
             const sections = [
                 { id: 'hero', state: threeScenes.hero },
@@ -633,7 +1034,6 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    // ⭐️ FIXED: Removed the invalid hyphen from 'const-'
                     const targetState = sections.find(s => s.id === entry.target.id)?.state;
                     if (targetState) {
                         targetState.isVisible = entry.isIntersecting;
@@ -647,7 +1047,6 @@
             });
         }
 
-        // --- Performance: Handle window resize for ALL scenes ---
         function onAllScenesResize() {
             for (const key in threeScenes) {
                 const s = threeScenes[key];
