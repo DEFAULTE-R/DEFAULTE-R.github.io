@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-M">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Hari L, a first-year Mechanical Engineering student specializing in CFD, robotics, and AI. View my engineering projects and skills.">
     <title>Hari L - Engineering Portfolio</title>
@@ -13,7 +13,6 @@
     
     <script>
         // ⭐️ 2. ENHANCED: Tailwind config with full Light/Dark mode palette
-        // This gives you more control and ensures consistency.
         tailwind.config = {
             theme: {
                 extend: {
@@ -46,41 +45,32 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Default to Light Mode */
             background-color: theme('colors.light-bg');
             color: theme('colors.light-text');
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-        /* Dark Mode styles */
         body.dark {
             background-color: theme('colors.dark-bg');
             color: theme('colors.dark-text');
         }
-
-        /* ⭐️ 3. UPDATED: Skill card is no longer hover-to-reveal */
         .skill-card {
             background-color: theme('colors.light-card');
             border: 1px solid theme('colors.light-border');
             transition: all 0.3s ease-in-out;
-            padding: 1.5rem; /* p-6 */
-            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
         }
         .dark .skill-card {
             background-color: theme('colors.dark-card');
             border: 1px solid theme('colors.dark-border');
         }
-        /* Simple hover for professional polish */
         .skill-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
         .dark .skill-card:hover {
-            box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.1); /* dark-primary glow */
+            box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.1);
         }
-
-
-        /* Project card hover glow */
         .project-card {
             background-color: theme('colors.light-card');
             border: 1px solid theme('colors.light-border');
@@ -92,22 +82,16 @@
             border: 1px solid theme('colors.dark-border');
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
-
         .project-card:hover {
-            /* Glow effect on hover (Light) */
-            box-shadow: 0 0 20px 5px rgba(37, 99, 235, 0.15); /* light-primary with opacity */
+            box-shadow: 0 0 20px 5px rgba(37, 99, 235, 0.15);
             transform: translateY(-4px) scale(1.03);
         }
         .dark .project-card:hover {
-            /* Glow effect on hover (Dark) */
-            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2); /* dark-primary with opacity */
+            box-shadow: 0 0 20px 5px rgba(0, 170, 255, 0.2);
         }
-        
         .project-card:active {
             transform: translateY(0px) scale(0.98);
         }
-
-        /* Social icon hover effect */
         .social-link .icon {
             width: 32px;
             height: 32px;
@@ -124,8 +108,6 @@
         .dark .social-link:hover .icon {
             color: theme('colors.dark-primary');
         }
-
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: theme('colors.light-border'); }
         .dark ::-webkit-scrollbar-track { background: theme('colors.dark-card'); }
@@ -133,8 +115,6 @@
         .dark ::-webkit-scrollbar-thumb { background: #555; }
         ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #777; }
-
-        /* Reveal on scroll animation */
         .reveal, .reveal-left, .reveal-right {
             opacity: 0;
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -146,17 +126,14 @@
             opacity: 1;
             transform: translate(0, 0);
         }
-
-        /* ⭐️ 4. ADDED: 3D Canvas Styles */
         .three-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Behind content */
+            z-index: 0;
         }
-        /* Ensure section content is on top */
         section {
             position: relative;
         }
@@ -462,7 +439,6 @@
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             setTheme(savedTheme || systemTheme);
 
-            // Add click listeners
             if (themeToggleButton) themeToggleButton.addEventListener('click', toggleTheme);
             if (themeToggleButtonMobile) themeToggleButtonMobile.addEventListener('click', toggleTheme);
 
@@ -473,11 +449,10 @@
             const mobileLinks = document.querySelectorAll('.mobile-link');
 
             function openMenu() { if (mobileMenu) mobileMenu.classList.remove('hidden'); }
-            // ⭐️ 11. FIXED: The mobile menu bug
             function closeMenu() { if (mobileMenu) mobileMenu.classList.add('hidden'); }
 
             if (menuButton) menuButton.addEventListener('click', openMenu);
-            if (closeButton) closeButton.addEventListener('click', closeMenu); // Bug fix!
+            if (closeButton) closeButton.addEventListener('click', closeMenu);
             mobileLinks.forEach(link => {
                 link.addEventListener('click', closeMenu);
             });
@@ -517,13 +492,12 @@
                 initHeroAnimation();
                 initAboutAnimation();
                 initContactAnimation();
-                startAnimationLoop(); // Start the single animation loop
-                setupVisibilityObserver(); // Start observing sections for performance
+                startAnimationLoop();
+                setupVisibilityObserver();
             } else {
                 console.error('Three.js library not loaded.');
             }
 
-            // Handle window resize for all 3D scenes
             window.addEventListener('resize', onAllScenesResize);
         });
         
@@ -576,7 +550,7 @@
             s.renderer.setSize(bounds.width, bounds.height);
             s.renderer.setClearColor(0x000000, 0);
 
-            const geometry = new THREE.IcosahedronGeometry(2); // radius 2
+            const geometry = new THREE.IcosahedronGeometry(2);
             const edges = new THREE.EdgesGeometry(geometry);
             const material = new THREE.LineBasicMaterial({
                 color: getThemeColors().primary,
@@ -621,9 +595,9 @@
                     sHero.particles.rotation.y += 0.0005;
                     const positions = sHero.particles.geometry.attributes.position.array;
                     for (let i = 0; i < positions.length; i += 3) {
-                        positions[i + 1] -= 0.01; // Move particle down
+                        positions[i + 1] -= 0.01;
                         if (positions[i + 1] < -10) {
-                            positions[i + 1] = 10; // Reset to top
+                            positions[i + 1] = 10;
                         }
                     }
                     sHero.particles.geometry.attributes.position.needsUpdate = true;
@@ -659,12 +633,13 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    const- targetState = sections.find(s => s.id === entry.target.id)?.state;
+                    // ⭐️ FIXED: Removed the invalid hyphen from 'const-'
+                    const targetState = sections.find(s => s.id === entry.target.id)?.state;
                     if (targetState) {
                         targetState.isVisible = entry.isIntersecting;
                     }
                 });
-            }, { threshold: 0.01 }); // Trigger even if 1% is visible
+            }, { threshold: 0.01 });
 
             sections.forEach(s => {
                 const el = document.getElementById(s.id);
