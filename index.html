@@ -71,7 +71,7 @@
                 <!-- Mobile menu button (simple links for mobile view) -->
                 <div class="md:hidden flex space-x-4 text-sm">
                     <a href="#projects" class="text-gray-300 hover:text-pink-500 transition duration-300">Projects</a>
-                    <a href="#contact" class="text-gray-300 hover:text-pink-500 transition duration-3300">Contact</a>
+                    <a href="#contact" class="text-gray-300 hover:text-pink-500 transition duration-300">Contact</a>
                 </div>
             </div>
         </nav>
@@ -426,7 +426,7 @@
                 aboutContainer.appendChild(aboutRenderer.domElement);
 
                 // Geometry
-                const aboutGeometry = new THREE.TorusKnotGeometry(4, 1.2, 100, 20); // <-- CHANGED from SphereGeometry
+                const aboutGeometry = new THREE.IcosahedronGeometry(5, 0); // <-- CHANGED to a more "core" like shape
 
                 // Materials
                 const aboutWireframeMaterial = new THREE.MeshBasicMaterial({ 
@@ -450,15 +450,62 @@
                 const aboutAmbientLight = new THREE.AmbientLight(0xffffff, 0.7);
                 aboutScene.add(aboutAmbientLight);
 
+                // --- NEW: Interaction Variables ---
+                const raycaster = new THREE.Raycaster();
+                const mouse = new THREE.Vector2();
+                let targetRotationX = 0;
+                let targetRotationY = 0;
+
+                // --- NEW: Mouse Move Listener for "following" effect ---
+                function onMouseMove(event) {
+                    if (aboutContainer) {
+                        const rect = aboutContainer.getBoundingClientRect();
+                        // Calculate normalized device coordinates (-1 to +1)
+                        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+                        // Set target rotation based on mouse position
+                        targetRotationX = mouse.y * 0.3;
+                        targetRotationY = mouse.x * 0.3;
+                    }
+                }
+
+                // --- NEW: Click Listener for color change ---
+                function onClick() {
+                    // Update the picking ray with the camera and mouse position
+                    raycaster.setFromCamera(mouse, aboutCamera);
+
+                    // Calculate objects intersecting the picking ray
+                    const intersects = raycaster.intersectObjects([aboutMesh, aboutPoints]);
+
+                    if (intersects.length > 0) {
+                        // Object was clicked, swap colors
+                        const currentWireColor = aboutMesh.material.color.getHex();
+                        
+                        if (currentWireColor === 0xec4899) { // If pink
+                            aboutMesh.material.color.set(0x3b82f6); // Set wire to blue
+                            aboutPoints.material.color.set(0xec4899); // Set points to pink
+                        } else { // If blue
+                            aboutMesh.material.color.set(0xec4899); // Set wire to pink
+                            aboutPoints.material.color.set(0x3b82f6); // Set points to blue
+                        }
+                    }
+                }
+
+                // Add event listeners to the canvas container
+                aboutContainer.addEventListener('mousemove', onMouseMove);
+                aboutContainer.addEventListener('click', onClick);
+
+
                 // Animation loop
                 function animateAbout() {
                     requestAnimationFrame(animateAbout);
 
-                    // Auto-rotation
-                    aboutMesh.rotation.x += 0.001;
-                    aboutMesh.rotation.y += 0.002;
-                    aboutPoints.rotation.x += 0.001;
-                    aboutPoints.rotation.y += 0.002;
+                    // --- UPDATED: Smoothly interpolate rotation to target (mouse) position ---
+                    aboutMesh.rotation.x += (targetRotationX - aboutMesh.rotation.x) * 0.05;
+                    aboutMesh.rotation.y += (targetRotationY - aboutMesh.rotation.y) * 0.05;
+                    aboutPoints.rotation.x += (targetRotationX - aboutPoints.rotation.x) * 0.05;
+                    aboutPoints.rotation.y += (targetRotationY - aboutPoints.rotation.y) * 0.05;
 
                     aboutRenderer.render(aboutScene, aboutCamera);
                 }
@@ -482,11 +529,9 @@
                 }
                 
                 const roles = [
-                    "Problem Solver",
-                    "Mechanical Engineer",
-                    "CFD Specialist",
-                    "Robotics Enthusiast",
-                    "AI Applicator"
+                    "Passionate Mechanical Engineer",
+                    "AI Enthusiast",
+                    "Problem Solver"
                 ];
                 let roleIndex = 0;
                 let charIndex = 0;
@@ -534,4 +579,8 @@
     </script>
 </body>
 </html>
+
+
+
+
 
