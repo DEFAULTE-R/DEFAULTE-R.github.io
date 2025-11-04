@@ -19,25 +19,25 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        // Light Mode - Professional Blue Theme
-                        'light-bg': '#0f172a',
-                        'light-card': '#1e293b',
-                        'light-text': '#f1f5f9',
-                        'light-text-muted': '#94a3b8',
-                        'light-primary': '#38bdf8',
-                        'light-primary-light': '#7dd3fc',
-                        'light-border': '#334155',
-                        'light-accent': '#60a5fa',
+                        // Light Mode - Clean White Theme
+                        'light-bg': '#ffffff',
+                        'light-card': '#f8fafc',
+                        'light-text': '#0f172a',
+                        'light-text-muted': '#475569',
+                        'light-primary': '#1e293b',
+                        'light-primary-light': '#334155',
+                        'light-border': '#cbd5e1',
+                        'light-accent': '#475569',
 
-                        // Dark Mode - Deep Blue Theme
+                        // Dark Mode - Clean Black Theme
                         'dark-bg': '#0f172a',
                         'dark-card': '#1e293b',
                         'dark-text': '#f1f5f9',
                         'dark-text-muted': '#94a3b8',
-                        'dark-primary': '#38bdf8',
-                        'dark-primary-light': '#7dd3fc',
+                        'dark-primary': '#f1f5f9',
+                        'dark-primary-light': '#cbd5e1',
                         'dark-border': '#334155',
-                        'dark-accent': '#60a5fa',
+                        'dark-accent': '#94a3b8',
                     }
                 },
             },
@@ -71,7 +71,7 @@
 
         /* Enhanced skill cards */
         .skill-card {
-            background: linear-gradient(145deg, theme('colors.light-card'), #1e293b);
+            background: theme('colors.light-card');
             border: 1px solid theme('colors.light-border');
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding: 1.5rem;
@@ -87,7 +87,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.1), transparent);
             transition: left 0.6s ease;
         }
 
@@ -96,13 +96,13 @@
         }
 
         .dark .skill-card {
-            background: linear-gradient(145deg, theme('colors.dark-card'), #1e293b);
+            background: theme('colors.dark-card');
             border: 1px solid theme('colors.dark-border');
         }
 
         .skill-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .dark .skill-card:hover {
@@ -111,10 +111,10 @@
 
         /* Enhanced project cards */
         .project-card {
-            background: linear-gradient(145deg, theme('colors.light-card'), #1e293b);
+            background: theme('colors.light-card');
             border: 1px solid theme('colors.light-border');
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
         }
@@ -126,25 +126,25 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            background: theme('colors.light-primary');
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.4s ease;
         }
 
         .dark .project-card {
-            background: linear-gradient(145deg, theme('colors.dark-card'), #1e293b);
+            background: theme('colors.dark-card');
             border: 1px solid theme('colors.dark-border');
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
 
         .dark .project-card::after {
-            background: linear-gradient(90deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+            background: theme('colors.dark-primary');
         }
 
         .project-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(56, 189, 248, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
         .project-card:hover::after {
@@ -152,7 +152,7 @@
         }
 
         .dark .project-card:hover {
-            box-shadow: 0 25px 50px -12px rgba(56, 189, 248, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
         }
         
         .project-card:active {
@@ -165,14 +165,14 @@
             width: 60px;
             height: 30px;
             border-radius: 15px;
-            background: linear-gradient(145deg, #475569, #334155);
+            background: theme('colors.light-primary');
             cursor: pointer;
             transition: all 0.4s ease;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .light .theme-toggle {
-            background: linear-gradient(145deg, #cbd5e1, #e2e8f0);
+        .dark .theme-toggle {
+            background: theme('colors.dark-primary');
         }
 
         .theme-toggle::before {
@@ -183,14 +183,14 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #f8fafc;
+            background: theme('colors.light-bg');
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .light .theme-toggle::before {
+        .dark .theme-toggle::before {
             transform: translateX(30px);
-            background: #f8fafc;
+            background: theme('colors.dark-bg');
         }
 
         .theme-toggle-icons {
@@ -207,12 +207,12 @@
         .theme-toggle-icons i {
             width: 14px;
             height: 14px;
-            color: #94a3b8;
+            color: theme('colors.light-bg');
             transition: color 0.3s ease;
         }
 
-        .light .theme-toggle-icons i {
-            color: #475569;
+        .dark .theme-toggle-icons i {
+            color: theme('colors.dark-bg');
         }
 
         /* Enhanced social icons */
@@ -225,7 +225,7 @@
             height: 48px;
             border-radius: 50%;
             background: theme('colors.light-card');
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
@@ -254,13 +254,13 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            background: theme('colors.light-primary');
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .dark .social-link::before {
-            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+            background: theme('colors.dark-primary');
         }
 
         .social-link:hover::before {
@@ -268,13 +268,17 @@
         }
 
         .social-link:hover .icon {
-            color: white;
+            color: theme('colors.light-bg');
             transform: scale(1.1);
+        }
+
+        .dark .social-link:hover .icon {
+            color: theme('colors.dark-bg');
         }
 
         .social-link:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .dark .social-link:hover {
@@ -335,14 +339,14 @@
 
         /* Gradient text */
         .gradient-text {
-            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            background: theme('colors.light-primary');
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .dark .gradient-text {
-            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+            background: theme('colors.dark-primary');
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -351,12 +355,13 @@
         /* Tech tag styling */
         .tech-tag {
             background: theme('colors.light-primary');
-            color: white;
+            color: theme('colors.light-bg');
             transition: all 0.3s ease;
         }
 
         .dark .tech-tag {
             background: theme('colors.dark-primary');
+            color: theme('colors.dark-bg');
         }
 
         .tech-tag:hover {
@@ -366,7 +371,8 @@
 
         /* Button enhancements */
         .primary-button {
-            background: linear-gradient(135deg, theme('colors.light-primary'), theme('colors.light-accent'));
+            background: theme('colors.light-primary');
+            color: theme('colors.light-bg');
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -388,29 +394,30 @@
         }
 
         .dark .primary-button {
-            background: linear-gradient(135deg, theme('colors.dark-primary'), theme('colors.dark-accent'));
+            background: theme('colors.dark-primary');
+            color: theme('colors.dark-bg');
         }
 
         .primary-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
 
         .dark .primary-button:hover {
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Background patterns */
         .bg-pattern {
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 25% 25%, rgba(30, 41, 59, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(71, 85, 105, 0.05) 0%, transparent 50%);
         }
 
-        .light .bg-pattern {
+        .dark .bg-pattern {
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 25% 25%, rgba(241, 245, 249, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(148, 163, 184, 0.05) 0%, transparent 50%);
         }
     </style>
 </head>
@@ -546,7 +553,7 @@
                 <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                                 <span class="text-xl">🏆</span>
                             </div>
                             <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">ASME IMECE BrainBolt 2025</h3>
@@ -572,7 +579,7 @@
                 <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                                 <span class="text-xl">🚣</span>
                             </div>
                             <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Kayak Paddle Optimization</h3>
@@ -598,7 +605,7 @@
                 <div class="project-card rounded-xl overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                                 <span class="text-xl">🤖</span>
                             </div>
                             <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Glass Cleaning Robot</h3>
@@ -630,7 +637,7 @@
                 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                             <i data-lucide="cpu" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Simulation & Analysis</h3>
@@ -657,7 +664,7 @@
 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                             <i data-lucide="printer" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Design & Manufacturing</h3>
@@ -684,7 +691,7 @@
 
                 <div class="skill-card">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-4">
                             <i data-lucide="code" class="w-6 h-6 text-light-primary dark:text-dark-primary"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-light-text dark:text-dark-text">Automation & Robotics</h3>
@@ -767,8 +774,8 @@
         const getThemeColors = () => {
             const isDark = document.documentElement.classList.contains('dark');
             return {
-                primary: isDark ? 0x38bdf8 : 0x2563eb,
-                particle: isDark ? 0x38bdf8 : 0x2563eb,
+                primary: isDark ? 0xf1f5f9 : 0x1e293b,
+                particle: isDark ? 0xf1f5f9 : 0x1e293b,
                 text: isDark ? 0xf1f5f9 : 0x1e293b
             };
         };
@@ -789,12 +796,10 @@
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
                     document.body.classList.add('dark');
-                    document.body.classList.remove('light');
                     localStorage.setItem('theme', 'dark');
                 } else {
                     document.documentElement.classList.remove('dark');
                     document.body.classList.remove('dark');
-                    document.body.classList.add('light');
                     localStorage.setItem('theme', 'light');
                 }
 
