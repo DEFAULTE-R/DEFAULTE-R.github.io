@@ -81,10 +81,12 @@
             <!-- NEW: Mobile Menu (Slide-in Panel) -->
             <div id="mobile-menu" class="hidden md:hidden">
                 <!-- Backdrop -->
-                <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"></div>
+                <!-- MODIFIED: Changed z-40 to z-60 to cover the sticky header (z-50) -->
+                <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-60"></div>
                 
                 <!-- Panel -->
-                <div class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-gray-950 z-50 p-6 shadow-2xl border-l border-gray-800">
+                <!-- MODIFIED: Changed z-50 to z-70 to be on top of the backdrop -->
+                <div class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-gray-950 z-70 p-6 shadow-2xl border-l border-gray-800">
                     <!-- Close Button -->
                     <div class="flex justify-end mb-8">
                         <button id="mobile-menu-close-btn" class="text-gray-400 hover:text-pink-500 transition duration-300 p-2">
