@@ -47,6 +47,30 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        /*
+            NEW: Mobile Menu Transitions
+            (The pointer-events rules are now removed, as JS will use 'display: none')
+        */
+        #mobile-menu-backdrop {
+            /* Base style for the backdrop (visible state) */
+            transition: opacity 300ms ease-in-out;
+            opacity: 1;
+        }
+        #mobile-menu-panel {
+            /* Base style for the panel (visible state) */
+            transition: transform 300ms ease-in-out;
+            transform: translateX(0%);
+        }
+
+        /* Styles when menu is hidden (has .menu-hidden class) */
+        .menu-hidden #mobile-menu-backdrop {
+            opacity: 0;
+        }
+        .menu-hidden #mobile-menu-panel {
+            transform: translateX(100%);
+        }
+
     </style>
 </head>
 <body class="bg-black text-gray-200">
@@ -78,14 +102,20 @@
                 </div>
             </div>
 
-            <!-- NEW: Mobile Menu (Slide-in Panel) -->
-            <div id="mobile-menu" class="hidden md:hidden">
-                <!-- Backdrop (z-60) -->
-                <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-60"></div>
+            <!-- 
+                NEW: Mobile Menu (Slide-in Panel)
+                MODIFIED: Added style="display: none;"
+            -->
+            <div id="mobile-menu" class="menu-hidden md:hidden fixed inset-0 z-60" style="display: none;">
+                <!-- 
+                    Backdrop (z-60)
+                -->
+                <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-md"></div>
                 
-                <!-- Panel (z-70) with glass effect -->
-                <!-- MODIFIED: Added bg-gray-950/80, backdrop-blur-lg, and changed border color -->
-                <div class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-gray-950/80 backdrop-blur-lg z-70 p-6 shadow-2xl border-l border-gray-700">
+                <!-- 
+                    Panel (z-70) with glass effect
+                -->
+                <div id="mobile-menu-panel" class="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-gray-950/95 backdrop-blur-lg z-70 p-6 shadow-2xl border-l border-gray-700">
                     <!-- Close Button -->
                     <div class="flex justify-end mb-8">
                         <button id="mobile-menu-close-btn" class="text-gray-400 hover:text-pink-500 transition duration-300 p-2">
@@ -99,7 +129,7 @@
                     <div class="flex flex-col space-y-6">
                         <a href="#about" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-300 text-xl font-medium">About</a>
                         <a href="#projects" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-300 text-xl font-medium">Projects</a>
-                        <a href="#web-demos" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-300 text-xl font-medium">Web Demos</a>
+                        <a href="#web-demos" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-3DES0 text-xl font-medium">Web Demos</a>
                         <a href="#skills" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-300 text-xl font-medium">Skills</a>
                         <a href="#contact" class="mobile-nav-link text-gray-300 hover:text-pink-500 transition duration-300 text-xl font-medium">Contact</a>
                     </div>
@@ -262,7 +292,7 @@
                             <p class="text-gray-400 mb-6 h-16">A responsive job application form layout. A pure HTML & CSS exercise.</p>
                             <div class="flex gap-4">
                                 <a href="https://defaulte-r.github.io/JobApplication/" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-white bg-pink-600 rounded-lg hover:bg-pink-700 transition duration-300">View Live Site</a>
-                                <a href="https://github.com/DEFAULTE-R/JobApplication" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-gray-200 bg-gray-800 rounded-lg hover:bg-gray-700 transition duration-300">View Code</a>
+                                <a href="httpsm://github.com/DEFAULTE-R/JobApplication" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-gray-200 bg-gray-800 rounded-lg hover:bg-gray-700 transition duration-300">View Code</a>
                             </div>
                         </div>
                     </div>
@@ -306,7 +336,7 @@
                             <p class="text-gray-400 mb-6 h-16">A simple HTML page for the Smart Glass Cleaning Robot project.</p>
                             <div class="flex gap-4">
                                 <a href="https://defaulte-r.github.io/Smart-Glass-Cleaning-Robot/" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300">View Live Site</a>
-                                <a href="https://github.com/DEFAULTE-R/Smart-Glass-Cleaning-Robot" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-gray-200 bg-gray-800 rounded-lg hover:bg-gray-700 transition duration-300">View Code</a>
+                                <a href="httpss://github.com/DEFAULTE-R/Smart-Glass-Cleaning-Robot" target="_blank" class="flex-1 text-center px-4 py-2 text-sm font-semibold text-gray-200 bg-gray-800 rounded-lg hover:bg-gray-700 transition duration-300">View Code</a>
                             </div>
                         </div>
                     </div>
@@ -641,25 +671,51 @@
                 type(); // Start the animation
             }
 
-            // --- NEW: Mobile Menu Toggle ---
+            // --- NEW: Mobile Menu Toggle (MODIFIED with robust 'display' logic) ---
             function initMobileMenu() {
                 const openBtn = document.getElementById('mobile-menu-open-btn');
                 const closeBtn = document.getElementById('mobile-menu-close-btn');
                 const backdrop = document.getElementById('mobile-menu-backdrop');
-                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenu = document.getElementById('mobile-menu'); // This is the parent
                 const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
                 if (!openBtn || !closeBtn || !mobileMenu || !backdrop) {
                     console.error("Mobile menu elements not found");
                     return;
                 }
+                
+                // Store the transition duration from CSS (300ms)
+                const transitionDuration = 300;
 
                 function openMenu() {
-                    mobileMenu.classList.remove('hidden');
+                    // 1. Make the container block, but it's still 'hidden'
+                    //    so the 'hidden' CSS styles are applied (off-screen)
+                    mobileMenu.style.display = 'block';
+                    
+                    // 2. Force a "reflow". 
+                    //    This makes the browser register the 'hidden' state *before*
+                    //    we remove the class to start the animation.
+                    void mobileMenu.offsetHeight; 
+                    
+                    // 3. Remove the 'menu-hidden' class. This triggers the
+                    //    CSS transition to the base (visible) styles.
+                    mobileMenu.classList.remove('menu-hidden');
                 }
 
                 function closeMenu() {
-                    mobileMenu.classList.add('hidden');
+                    // 1. Add the 'menu-hidden' class to trigger the
+                    //    CSS transition to the hidden styles (slide out).
+                    mobileMenu.classList.add('menu-hidden');
+                    
+                    // 2. After the transition animation finishes (300ms),
+                    //    set the display to 'none' to hide it completely.
+                    setTimeout(() => {
+                        // Only hide it if it's still supposed to be closed
+                        // (prevents errors if user clicks open/close rapidly)
+                        if (mobileMenu.classList.contains('menu-hidden')) {
+                            mobileMenu.style.display = 'none';
+                        }
+                    }, transitionDuration);
                 }
 
                 openBtn.addEventListener('click', openMenu);
