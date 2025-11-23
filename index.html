@@ -141,6 +141,8 @@
     <main>
         <!-- Hero Section -->
         <section id="home" class="min-h-screen flex justify-center items-center relative overflow-hidden bg-gradient-to-br from-black to-gray-950">
+            <!-- 3D Background Canvas -->
+            <div id="hero-3d-background" class="absolute inset-0 z-0"></div>
             <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
                 <div class="py-12 text-center bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-8 md:p-12">
                     <h1 class="text-5xl md:text-7xl font-extrabold">
@@ -495,6 +497,85 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- Hero Background 3D Animation ---
+            function initHeroBackground() {
+                const heroContainer = document.getElementById('hero-3d-background');
+                if (!heroContainer) {
+                    console.error("Hero 3D background container not found");
+                    return;
+                }
+
+                // Scene
+                const heroScene = new THREE.Scene();
+
+                // Camera
+                const heroCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                heroCamera.position.z = 30;
+
+                // Renderer
+                const heroRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                heroRenderer.setSize(window.innerWidth, window.innerHeight);
+                heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
+                heroContainer.appendChild(heroRenderer.domElement);
+
+                // Create multiple small icosahedrons scattered in space
+                const icosahedrons = [];
+                const numShapes = 15; // Number of icosahedrons
+
+                for (let i = 0; i < numShapes; i++) {
+                    const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+                    
+                    // Alternate between pink and blue with wireframe
+                    const color = i % 2 === 0 ? 0xec4899 : 0x3b82f6;
+                    const material = new THREE.MeshBasicMaterial({
+                        color: color,
+                        wireframe: true,
+                        transparent: true,
+                        opacity: 0.15 // Very subtle
+                    });
+                    
+                    const mesh = new THREE.Mesh(geometry, material);
+                    
+                    // Random position
+                    mesh.position.x = (Math.random() - 0.5) * 60;
+                    mesh.position.y = (Math.random() - 0.5) * 40;
+                    mesh.position.z = (Math.random() - 0.5) * 40;
+                    
+                    // Random rotation speed
+                    mesh.userData.rotationSpeed = {
+                        x: (Math.random() - 0.5) * 0.01,
+                        y: (Math.random() - 0.5) * 0.01,
+                        z: (Math.random() - 0.5) * 0.01
+                    };
+                    
+                    heroScene.add(mesh);
+                    icosahedrons.push(mesh);
+                }
+
+                // Animation loop
+                function animateHero() {
+                    requestAnimationFrame(animateHero);
+
+                    // Rotate each icosahedron
+                    icosahedrons.forEach(mesh => {
+                        mesh.rotation.x += mesh.userData.rotationSpeed.x;
+                        mesh.rotation.y += mesh.userData.rotationSpeed.y;
+                        mesh.rotation.z += mesh.userData.rotationSpeed.z;
+                    });
+
+                    heroRenderer.render(heroScene, heroCamera);
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    heroCamera.aspect = window.innerWidth / window.innerHeight;
+                    heroCamera.updateProjectionMatrix();
+                    heroRenderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                animateHero();
+            }
+
             // --- About Me Canvas ---
             function initAboutCanvas() {
                 const aboutContainer = document.getElementById('three-canvas-about');
@@ -547,6 +628,8 @@
                 let mouseRotationX = 0;
                 let mouseRotationY = 0;
                 let autoRotationY = 0;  // For constant auto-rotation
+                let isDragging = false;
+                let previousMousePosition = { x: 0, y: 0 };
 
                 // --- Mouse Move Listener for "following" effect ---
                 function onMouseMove(event) {
@@ -556,14 +639,48 @@
                         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
                         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 - 1;
 
-                        // Set target rotation based on mouse position
-                        mouseRotationX = mouse.y * 0.3;
-                        mouseRotationY = mouse.x * 0.3;
+                        if (!isDragging) {
+                            // Set target rotation based on mouse position (when not dragging)
+                            mouseRotationX = mouse.y * 0.3;
+                            mouseRotationY = mouse.x * 0.3;
+                        }
                     }
+                }
+
+                // --- Mouse Down/Touch Start for dragging ---
+                function onPointerDown(event) {
+                    isDragging = true;
+                    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+                    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+                    previousMousePosition = { x: clientX, y: clientY };
+                }
+
+                // --- Mouse Move/Touch Move for dragging ---
+                function onPointerMove(event) {
+                    if (isDragging) {
+                        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+                        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+                        
+                        const deltaX = clientX - previousMousePosition.x;
+                        const deltaY = clientY - previousMousePosition.y;
+                        
+                        // Update rotation based on drag
+                        mouseRotationY += deltaX * 0.01;
+                        mouseRotationX += deltaY * 0.01;
+                        
+                        previousMousePosition = { x: clientX, y: clientY };
+                    }
+                }
+
+                // --- Mouse Up/Touch End ---
+                function onPointerUp() {
+                    isDragging = false;
                 }
 
                 // --- Click Listener for color change ---
                 function onClick() {
+                    if (isDragging) return; // Don't trigger click if we were dragging
+                    
                     // Update the picking ray with the camera and mouse position
                     raycaster.setFromCamera(mouse, aboutCamera);
 
@@ -576,7 +693,7 @@
                                                                         
                         if (currentWireColor === 0xec4899) { // If pink
                             aboutMesh.material.color.set(0x3b82f6); // Set wire to blue
-                            aboutPoints.material.color.set(0xfec4899); // Set points to pink
+                            aboutPoints.material.color.set(0xec4899); // Set points to pink
                         } else { // If blue
                             aboutMesh.material.color.set(0xec4899); // Set wire to pink
                             aboutPoints.material.color.set(0x3b82f6); // Set points to blue
@@ -586,6 +703,16 @@
                 
                 // Add event listeners to the canvas container
                 aboutContainer.addEventListener('mousemove', onMouseMove);
+                aboutContainer.addEventListener('mousedown', onPointerDown);
+                aboutContainer.addEventListener('mousemove', onPointerMove);
+                aboutContainer.addEventListener('mouseup', onPointerUp);
+                aboutContainer.addEventListener('mouseleave', onPointerUp);
+                
+                // Touch events
+                aboutContainer.addEventListener('touchstart', onPointerDown, { passive: true });
+                aboutContainer.addEventListener('touchmove', onPointerMove, { passive: true });
+                aboutContainer.addEventListener('touchend', onPointerUp);
+                
                 aboutContainer.addEventListener('click', onClick);
 
                 // Animation loop
@@ -729,6 +856,7 @@
             }
 
             // Start everything
+            initHeroBackground(); // Initialize hero background animation
             initAboutCanvas(); // Initialize the new canvas
             initTypingAnimation(); // Start the typing effect
             initMobileMenu(); // Initialize the mobile menu
