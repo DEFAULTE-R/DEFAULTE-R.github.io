@@ -575,10 +575,13 @@
                 heroCamera.position.z = 30;
 
                 // Renderer
-                const heroRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                const heroRenderer = new THREE.WebGLRenderer({ 
+                    antialias: true, 
+                    alpha: true,
+                    powerPreference: 'high-performance'
+                });
                 heroRenderer.setSize(window.innerWidth, window.innerHeight);
                 heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
-                heroRenderer.powerPreference = "high-performance"; // Performance hint
                 heroContainer.appendChild(heroRenderer.domElement);
 
                 // Create multiple small icosahedrons scattered in space
@@ -702,16 +705,29 @@
                 let isDragging = false;
                 let previousMousePosition = { x: 0, y: 0 };
 
-                // --- Mouse Move Listener for "following" effect ---
-                function onMouseMove(event) {
+                // --- Mouse Move/Touch Move for both following and dragging ---
+                function onPointerMove(event) {
                     if (aboutContainer) {
                         const rect = aboutContainer.getBoundingClientRect();
+                        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+                        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+                        
                         // Calculate normalized device coordinates (-1 to +1)
-                        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-                        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 - 1;
+                        mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                        mouse.y = -((clientY - rect.top) / rect.height) * 2 - 1;
 
-                        if (!isDragging) {
-                            // Set target rotation based on mouse position (when not dragging)
+                        if (isDragging) {
+                            // Dragging mode
+                            const deltaX = clientX - previousMousePosition.x;
+                            const deltaY = clientY - previousMousePosition.y;
+                            
+                            // Update rotation based on drag
+                            mouseRotationY += deltaX * 0.01;
+                            mouseRotationX += deltaY * 0.01;
+                            
+                            previousMousePosition = { x: clientX, y: clientY };
+                        } else {
+                            // Following mode (when not dragging)
                             mouseRotationX = mouse.y * 0.3;
                             mouseRotationY = mouse.x * 0.3;
                         }
@@ -724,23 +740,6 @@
                     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
                     const clientY = event.touches ? event.touches[0].clientY : event.clientY;
                     previousMousePosition = { x: clientX, y: clientY };
-                }
-
-                // --- Mouse Move/Touch Move for dragging ---
-                function onPointerMove(event) {
-                    if (isDragging) {
-                        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-                        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-                        
-                        const deltaX = clientX - previousMousePosition.x;
-                        const deltaY = clientY - previousMousePosition.y;
-                        
-                        // Update rotation based on drag
-                        mouseRotationY += deltaX * 0.01;
-                        mouseRotationX += deltaY * 0.01;
-                        
-                        previousMousePosition = { x: clientX, y: clientY };
-                    }
                 }
 
                 // --- Mouse Up/Touch End ---
@@ -773,15 +772,22 @@
                 }
                 
                 // Add event listeners to the canvas container
-                aboutContainer.addEventListener('mousemove', onMouseMove);
-                aboutContainer.addEventListener('mousedown', onPointerDown);
                 aboutContainer.addEventListener('mousemove', onPointerMove);
+                aboutContainer.addEventListener('mousedown', onPointerDown);
                 aboutContainer.addEventListener('mouseup', onPointerUp);
                 aboutContainer.addEventListener('mouseleave', onPointerUp);
                 
                 // Touch events
-                aboutContainer.addEventListener('touchstart', onPointerDown, { passive: true });
-                aboutContainer.addEventListener('touchmove', onPointerMove, { passive: true });
+                aboutContainer.addEventListener('touchstart', (e) => {
+                    onPointerDown(e);
+                    if (isDragging) e.preventDefault();
+                }, { passive: false });
+                aboutContainer.addEventListener('touchmove', (e) => {
+                    if (isDragging) {
+                        e.preventDefault();
+                        onPointerMove(e);
+                    }
+                }, { passive: false });
                 aboutContainer.addEventListener('touchend', onPointerUp);
                 
                 aboutContainer.addEventListener('click', onClick);
@@ -982,8 +988,16 @@
                 container.addEventListener('click', onClick);
                 
                 // Touch events
-                container.addEventListener('touchstart', onPointerDown, { passive: false });
-                container.addEventListener('touchmove', onPointerMove, { passive: false });
+                container.addEventListener('touchstart', (e) => {
+                    onPointerDown(e);
+                    if (isDragging) e.preventDefault();
+                }, { passive: false });
+                container.addEventListener('touchmove', (e) => {
+                    if (isDragging) {
+                        e.preventDefault();
+                        onPointerMove(e);
+                    }
+                }, { passive: false });
                 container.addEventListener('touchend', onPointerUp);
 
                 // Animation loop
