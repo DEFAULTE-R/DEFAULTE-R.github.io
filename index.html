@@ -48,6 +48,20 @@
             50% { opacity: 0; }
         }
 
+        /* Performance optimization for 3D canvases */
+        canvas {
+            display: block;
+            will-change: transform;
+        }
+
+        /* Ensure 3D canvas containers don't cause layout shift */
+        .three-canvas-project,
+        .three-canvas-webdemo,
+        .three-canvas-skill {
+            width: 100%;
+            height: 100%;
+        }
+
         /*
             NEW: Mobile Menu Transitions
             (The pointer-events rules are now removed, as JS will use 'display: none')
@@ -564,6 +578,7 @@
                 const heroRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                 heroRenderer.setSize(window.innerWidth, window.innerHeight);
                 heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
+                heroRenderer.powerPreference = "high-performance"; // Performance hint
                 heroContainer.appendChild(heroRenderer.domElement);
 
                 // Create multiple small icosahedrons scattered in space
@@ -601,8 +616,16 @@
                 }
 
                 // Animation loop
+                let isVisible = true;
+                const observer = new IntersectionObserver((entries) => {
+                    isVisible = entries[0].isIntersecting;
+                }, { threshold: 0.1 });
+                observer.observe(heroContainer);
+
                 function animateHero() {
                     requestAnimationFrame(animateHero);
+
+                    if (!isVisible) return; // Skip rendering if not visible
 
                     // Rotate each icosahedron
                     icosahedrons.forEach(mesh => {
@@ -964,8 +987,16 @@
                 container.addEventListener('touchend', onPointerUp);
 
                 // Animation loop
+                let isVisible = true;
+                const visibilityObserver = new IntersectionObserver((entries) => {
+                    isVisible = entries[0].isIntersecting;
+                }, { threshold: 0.1 });
+                visibilityObserver.observe(container);
+
                 function animate() {
                     requestAnimationFrame(animate);
+
+                    if (!isVisible) return; // Skip rendering if not visible
 
                     // Auto-rotation
                     targetRotationY += currentRotationSpeed;
