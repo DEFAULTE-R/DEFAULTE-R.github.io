@@ -755,9 +755,12 @@
                 });
             }
 
+            // --- 3D Thumbnail Data Storage ---
+            const thumbnailDataMap = new Map();
+
             // --- 3D Thumbnail Generator for Project/Demo Cards ---
             function createThumb3D(container, shapeType, accentColor) {
-                if (!container) return;
+                if (!container) return null;
 
                 const width = container.clientWidth;
                 const height = container.clientHeight;
@@ -851,9 +854,12 @@
                 secondLight.position.set(2, -1, 1);
                 scene.add(secondLight);
 
-                // Animation
-                let animationId;
+                // Animation with cleanup capability
+                let animationId = null;
+                let isAnimating = true;
+                
                 function animate() {
+                    if (!isAnimating) return;
                     animationId = requestAnimationFrame(animate);
                     mainMesh.rotation.x += 0.005;
                     mainMesh.rotation.y += 0.008;
@@ -863,8 +869,24 @@
                 }
                 animate();
 
-                // Store reference for resize handling
-                container._thumbData = { camera, renderer, scene, mainMesh, wireframeMesh };
+                // Cleanup function to stop animation and dispose resources
+                function cleanup() {
+                    isAnimating = false;
+                    if (animationId !== null) {
+                        cancelAnimationFrame(animationId);
+                    }
+                    geometry.dispose();
+                    mainMaterial.dispose();
+                    wireframeMaterial.dispose();
+                    renderer.dispose();
+                    thumbnailDataMap.delete(container);
+                }
+
+                // Store reference in Map for resize handling
+                const thumbData = { camera, renderer, scene, mainMesh, wireframeMesh, cleanup };
+                thumbnailDataMap.set(container, thumbData);
+                
+                return thumbData;
             }
 
             // --- Initialize all 3D Thumbnails ---
@@ -879,8 +901,9 @@
                 // Handle resize for all thumbnails
                 window.addEventListener('resize', () => {
                     thumbContainers.forEach(container => {
-                        if (container._thumbData) {
-                            const { camera, renderer } = container._thumbData;
+                        const thumbData = thumbnailDataMap.get(container);
+                        if (thumbData) {
+                            const { camera, renderer } = thumbData;
                             const width = container.clientWidth;
                             const height = container.clientHeight;
                             camera.aspect = width / height;
