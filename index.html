@@ -898,8 +898,9 @@
                     createThumb3D(container, shape, accent);
                 });
 
-                // Handle resize for all thumbnails
-                window.addEventListener('resize', () => {
+                // Debounced resize handler for performance
+                let resizeTimeout;
+                function handleResize() {
                     thumbContainers.forEach(container => {
                         const thumbData = thumbnailDataMap.get(container);
                         if (thumbData) {
@@ -911,6 +912,11 @@
                             renderer.setSize(width, height);
                         }
                     });
+                }
+
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(handleResize, 150);
                 });
             }
 
